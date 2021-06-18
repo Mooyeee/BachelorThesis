@@ -1,0 +1,57 @@
+\documentclass[a4paper, 12pt, oneside]{report}
+
+\usepackage[english, italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[autostyle=true]{csquotes}
+\usepackage{graphicx}
+\usepackage[backend=biber, backref=true]{biblatex}
+\addbibresource{ref.bib}
+\setlength{\parskip}{1em}
+\usepackage{geometry}
+\usepackage{setspace}
+
+% Opzioni stile capitoli
+\usepackage[Rejne]{fncychap}
+\makeatletter
+\renewcommand*{\@makechapterhead}[1]{%
+  \vspace*{5\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+      \if@mainmatter%%%%% Fix for frontmatter, mainmatter, and backmatter 040920
+        \DOCH
+      \fi
+    \fi
+    \interlinepenalty\@M
+    \if@mainmatter%%%%% Fix for frontmatter, mainmatter, and backmatter 060424
+      \DOTI{#1}%
+    \else%
+      \DOTIS{#1}%
+    \fi
+  }}
+% For the case \chapter*:
+\renewcommand*{\@makeschapterhead}[1]{%
+  \vspace*{5\p@}%
+  {\parindent \z@ \raggedright
+    \normalfont
+    \interlinepenalty\@M
+    \DOTIS{#1}
+    \vskip 5\p@
+  }}
+  \ChNameVar{\centering\large\rm}
+\makeatother
+
+
+\begin{document}
+\include{capitoli/frontespizio}
+
+\tableofcontents
+
+\include{capitoli/introduzione}
+\include{capitoli/1_mindblooming}
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{\bibname}
+\printbibliography
+\end{document}	
