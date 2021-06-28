@@ -1,0 +1,32 @@
+\begin{table}[h!]
+\centering
+\def\arraystretch{1.5}
+\label{table:glossario}
+\begin{tabular}{| m{6em} | m{6em} | m{21em} |}
+ \hline
+ \textbf{TERMINE} & \textbf{SINONIMI} & \textbf{SIGNIFICATO} \\
+ \hline \hline
+ 
+ \textbf{Survey} & \textit{Sondaggio, Questionario} & La survey è l'\textit{involucro} più esterno che viene presentato all'utente; contiene uno o più \textit{blocchi}, ognuno dei quali contiene delle domande. Le risposte che vengono inviate sono legate ad essa \textit{(vengono inviate all'endpoint corrispondete al surveyID)}. \\ 
+ \hline
+ 
+ \textbf{Block} & \textit{Blocco, \newline Sezione} & Un blocco è una parte di survery, che permette di mostrare le domande in un certo ordine piuttosto che in un altro; se ci sono più blocchi veranno visualizzate prima tutte le domande del primo blocco, e poi quelle del secondo e così via. \\ 
+ \hline
+ 
+ \textbf{Question} & \textit{Domanda} & La parte atomica della survey, quella che viene effettivamente legata alla risposta \textit{(tramite il suo ID)}. \\
+ \hline
+ 
+ \textbf{Response} & \textit{Risposta} & La risposta vera e propria relativa ad una certa domanda. \\
+ \hline
+ 
+ \textbf{Choice} & \textit{Scelta} & Una possibile risposta ad una domanda; se scelta diventa una risposta. \\
+ \hline
+ 
+ \textbf{Object} & \textit{Oggetto, Mappa, Map} & Sono gli oggetti JSON presenti nelle risposte alle API. \newline Vengono chiamati anche mappe perché in flutter vengono tradotti in \texttt{Map<key: value>}. \\
+ \hline
+ 
+ \textbf{Validation} & \textit{Validazione} & Una serie di regole \textit{(logiche)} che le risposte devono rispettare per essere valide. Il controllo avviene client-side, prima dell'invio. \\
+ \hline
+\end{tabular}
+\caption{Glossario}
+\end{table}
