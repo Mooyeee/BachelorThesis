@@ -5,13 +5,26 @@
 \usepackage[utf8]{inputenc}
 \usepackage[autostyle=true]{csquotes}
 \usepackage{graphicx}
-\usepackage[backend=biber, backref=true, sorting=none]{biblatex}
+\usepackage[backend=biber, backref=true, sorting=none, maxbibnames=5]{biblatex}
 \addbibresource{ref.bib}
 \setlength{\parskip}{1em}
 \usepackage{geometry}
 \usepackage{setspace}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[newfloat]{minted}
+\usepackage{xcolor, colortbl}
 \usepackage{hyperref}
+\usepackage{caption}
 \usepackage[titles]{tocloft}
+
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\SetupFloatingEnvironment{listing}{name=Codice}
+
+\newenvironment{json}{\captionsetup{type=listing}}{}
+\SetupFloatingEnvironment{listing}{name=JSON}
+
+\def\labelitemi{--}
 
 
 % Opzioni stile capitoli
@@ -53,6 +66,8 @@
 \include{capitoli/introduzione}
 \include{capitoli/1_mindblooming}
 \include{capitoli/2_progettazione}
+\include{capitoli/3_implementazione}
+\include{capitoli/4_manuale_utente}
 
 \cleardoublepage
 \phantomsection
