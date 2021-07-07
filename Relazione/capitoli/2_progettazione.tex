@@ -1,4 +1,5 @@
 \chapter{Progettazione}
+\label{chap:progettazione}
 Prima di poter mettere mano all'applicazione è stato necessario un iniziale periodo di studio dell'ambiente, in particolare del linguaggio \textbf{Dart} e del framework \textbf{Flutter}; è stato piacevole scoprire come Flutter supporti nativamente sia il \textbf{Material Design}, stile adottato per lo sviluppo dell'interfaccia grafica \textit{(almeno per quanto riguarda Android)}, sia lo stile \textbf{Cupertino}, ovvero lo stile nativo di iOS, impostando di default alcune regole di tali stili quando vengono creati determinati widget.
 
 Successivamente a questo periodo di studio è iniziata la vera e propria progettazione dell'applicazione, fase durante la quale sono stati stabiliti il modello dei dati e l'architettura adottata per lo sviluppo. Una nota importante riguardo i dati è che questi sono stati creati da un altro gruppo di persone specializzate in psicologia, che quindi ha ideato, durante lo sviluppo del progetto, le domande necessarie: era dunque necessario che il backend dell'applicazione, qulunque esso fosse stato, permettesse l'accesso sia all'applicazione stessa in lettura che al gruppo di psicologia in scrittura.
@@ -11,6 +12,7 @@ Prima di procedere e parlare dell'effettiva organizzazione dei dati è necessari
 \input{capitoli/tabella_glossario}
 
 \section{Struttura applicazione}
+\label{chap:struttura_applicazione}
 I dati ricevuti prima dell'inizio stesso del progetto riguardavano la struttura dell'applicazione in termini di sezioni e di come queste devono essere organizzate. In particolare, le patologie da identificare e su cui lavorare sono sette: Depressione, Ansia, Pensieri Autodistruttivi, Problemi di Sonno, Burnout, Dolore Cronico e Difficoltà Relazionali. Ognuna di queste problematiche prevede uno specifico \textbf{screening} con una specifica scala che determinerà se l'utente ne è affetto o meno e uno specifico \textbf{percorso terapeutico} della durata di sette settimane. Un'eccezione è fatta per il modulo relativo alle difficoltà relazionali che è \textbf{trasversale} rispetto agli altri: alla sesta settimana tutti gli utenti affronteranno una psico-educazione e degli esercizi relativi alle difficoltà relazionali. Le altre settimane sono caratterizzate da un'iniziale \textbf{psico-educazione} sulle patologie di cui soffre l'utente seguite da una serie di \textbf{esercizi} e da un \textbf{weekly screening} utile per monitorare l'andamento dell'utente. Durante tutto ciò, ogni giorno verrà somministrato all'utente un piccolo questionario giornaliero, notificato ad un orario scelto dall'utente.
 Infine, dopo il percorso e dopo 12 e 24 settimane verranno somministrati all'utente gli screening iniziali, in modo da poter avere un'idea del progresso fatto.
 
@@ -27,7 +29,6 @@ Infine, dopo il percorso e dopo 12 e 24 settimane verranno somministrati all'ute
 
 In particolare, le diverse sezioni sono:
 
-\renewcommand{\labelitemi}{$\textendash$}
 \begin{itemize}
 \item \textbf{Introduzione}: la prima cosa presentata all'utente è una introduzione video in cui le tutor di psicologia si presentano e spiegano all'utente cosa affronterà nelle successive settimane.
 \item \textbf{Screening}: subito dopo la presentazione iniziale inizia lo screening dell'utente, che consiste in un processo di identificazione e selezione delle patologie di cui \textit{(presumibilmente)} l'utente soffre. Questo processo è realizzato tramite domande mirate che permettano di ottenere un punteggio associato ad ogni patologia secondo diversi algoritmi che dipendono dalla patologia stessa e dalla scala utilizzata per misurarla. Alla fine del processo di screening verranno scelte le due patologie con un punteggio abbastanza alto da essere considerate preoccupanti come patologie su cui lavorare se ce ne sono, altrimenti se solo una patologia ha un punteggio alto verrà scelta, lasciando libera scelta all'utente sulla seconda. Se nessuna patologia ha un punteggio abbastanza alto, l'utente può comunque scegliere due patologie su cui lavorare.
@@ -62,12 +63,14 @@ Ogni entità è inoltre opportunamente identificata.
 \newpage
 
 \subsection{Modello dati: blocchi}
+\label{subsection:blocchi}
 Un aspetto particolare riguardo l'organizzazione delle domande nell'ambiente Qualtrics è quello legato ai \textbf{Blocks}, che sono degli insiemi di domande presentati separatamente. Questo permette di non sovraccaricare una schermata di domande ma di suddividerle in parti visualizzate indipendentemente.
 Come si può vedere sempre nella Figura \ref{fig:modello_semplice_qualtrics}, i blocchi sono degli oggetti contenuti nell'oggetto \texttt{Survey} che dispongono di un \texttt{BlockID} e di una \texttt{Description}, una descrizione testuale utilizzata per dare un'idea del contesto delle domande presenti nel blocco. Inoltre, i blocchi contengono una lista di oggetti \texttt{BlockElements} che, seppur contente oggetti, non contiene le domande vere e proprie, ma solo gli \texttt{QuestionID} delle domande facenti parte del rispettivo blocco; è necessario quindi un incrocio dei dati nell'applicazione per far sì che le domande rispettino l'ordine dei blocchi.
 
 È presente inoltre, sempre nell'oggetto \texttt{Survey}, un ulteriore oggetto \texttt{SurveyFlow} che contiene l'ordine di visualizzazione dei blocchi in una lista contenente i \texttt{BlockID} corrispondenti \textit{(in quanto potrebbero non essere nel giusto ordine all'interno dell'oggetto \texttt{Blocks})}.
 
 \subsection{Modello dati: risposte}
+\label{subsection:risposte}
 Sempre nella Figura \ref{fig:modello_semplice_qualtrics} possiamo osservare anche come sono fatte le risposte nel backend; in particolare, essendo ogni entità opportunamente identificata direttamente da Qualtrics, le risposte non sono altro che degli oggetti contenenti delle coppie \texttt{\{ID\_Domanda: ID\_Risposta\}} oppure \texttt{\{ID\_Domanda: [ID\_Risposta\_1, ..., ID\_Risposta\_n]\}}, nel caso di domande a risposta chiusa, mentre nel caso di domande a risposta aperta sono del tipo \texttt{\{ID\_Domanda: "Risposta"\}}. Oltre a questo, possono contenere dei meta-dati che diano informazioni ad esempio sul tempo impiegato per rispondere o eventualmente sul browser utilizzato dagli utenti: di questi dati la maggior parte non verranno prodotti dall'applicazione, essendo opzionali \textit{(ricordiamo che Qualtrics è stato pensato per essere implementato in siti web)}.
 
 \begin{figure}
@@ -77,7 +80,7 @@ Sempre nella Figura \ref{fig:modello_semplice_qualtrics} possiamo osservare anch
 \label{fig:modello_semplice_qualtrics}
 \end{figure}
 
-\newpage
+\newpage \newpage
 
 \section{Architettura adottata}
 Per lo sviluppo vero e proprio dell'applicazione è stato adottato il pattern architetturale \textbf{Model-View-Controller \textit{(MVC)}}\cite{MVC}, che è un'architettura che permette di slegare la \textbf{logica di presentazione} dalla \textbf{logica di business} tramite la separazione delle responsabilità tra tre principali componenti software:
@@ -88,7 +91,7 @@ Per lo sviluppo vero e proprio dell'applicazione è stato adottato il pattern ar
 \end{itemize}
 
 \subsection{MVC in Flutter}
-Le componenti \textbf{View} dell'applicazione sono costituite dalla parte atomica di un'applicazione Flutter, gli \textbf{widget}\footnote{\url{https://flutter.dev/docs/development/ui/widgets-intro}}: ogni elemento visibile a schermo è un qualche tipo di widget o una combinazione di widget. Flutter permette di avere degli widget all'interno di altri widget e di definire dei \textbf{custom widget}, costituiti da combinazioni di widget più basilari, per definire delle UI complesse. Man mano che si definiscono diversi widget all'interno dell'applicazione, Flutter crea un \textbf{widget tree}, ovvero un albero che rappresenta la gerarchia tra widget mostrando i vari parent \textit{(widget complessi di livello superiore)} e i children \textit{(widget base definiti da Flutter)} e che verrà poi utilizzato per ottimizzare il rendering dell'UI.
+Le componenti \textbf{View} dell'applicazione sono costituite dalla parte atomica di un'applicazione Flutter, i \textbf{widget}\footnote{\url{https://flutter.dev/docs/development/ui/widgets-intro}}: ogni elemento visibile a schermo è un qualche tipo di widget o una combinazione di widget. Flutter permette di avere dei widget all'interno di altri widget e di definire dei \textbf{custom widget}, costituiti da combinazioni di widget più basilari, per definire delle UI complesse. Man mano che si definiscono diversi widget all'interno dell'applicazione, Flutter crea un \textbf{widget tree}, ovvero un albero che rappresenta la gerarchia tra widget mostrando i vari parent \textit{(widget complessi di livello superiore)} e i children \textit{(widget base definiti da Flutter)} e che verrà poi utilizzato per ottimizzare il rendering dell'UI.
 Possiamo osservare un esempio di widget tree nella Figura \ref{fig:widget_tree}.
 
 \begin{figure}[h]
@@ -109,7 +112,7 @@ Come è possibile osservare nella Figura \ref{fig:MVC_Flutter}, per realizzare l
 
 \section{Interfaccia utente}
 Fin da subito è stato condotto uno studio anche su quale sarebbe stato lo stile grafico adottato per l'applicazione: visto il target e l'importanza di un'applicazione del genere è sicuramente molto importante che essa sia facile da utilizzare, intuitiva e gradevole.
-Vista la continua crescita e la predisposizione di Flutter verso il \textbf{Material Design}\footnote{\url{https://material.io/}}, si è scelto questo come stile grafico da adottare in quanto fornisce delle linee guida per ottenere semplicità d'uso ed intuitività, lanciando però comunque spazio al designer per rendere il tutto anche visivamente piacevole e personale.
+Vista la continua crescita e la predisposizione di Flutter verso il \textbf{Material Design}\footnote{\url{https://material.io/}}, si è scelto questo come stile grafico da adottare in quanto fornisce delle linee guida per ottenere semplicità d'uso ed intuitività, lasciando però comunque spazio al designer per rendere il tutto anche visivamente piacevole e personale.
 
 \subsection{Material Design}
 Il \textit{Material Design} si è evoluto molto nel tempo nel tentativo di Google di dare agli sviluppatori un sistema di design che aiutasse a creare delle esperienze di alta qualità che siano anche consistenti tra diverse piattaforme come Android, iOS e Web \textit{(ed è anche per questo che Flutter adotta nativamente alcune linee guida di questo stile)} in un ambiente in cui Apple andava molto verso il realismo col suo \textit{scheumorfismo} che però rischiava di distrarre troppo l'utente con i suoi troppi dettagli e dove Microsoft sosteneva il suo \textit{Metro/Flat design} che invece creava confusione su cosa era effettivamente interattivo e cosa no. Google voleva quindi offrire i vantaggi di entrambe le soluzioni utilizzando sia riferimenti al realismo che la semplicità del minimalismo.
