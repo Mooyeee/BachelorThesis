@@ -151,7 +151,7 @@ Anche in questo caso la documentazione ufficiale di Qualtrics non era molto chia
 Abbiamo detto che i blocchi sono degli sotto-insiemi di domande da mostrare separatamente: per fare ciò tuttavia sono necessarie alcune operazioni preliminari atte a ordinare i blocchi e successivamente ad associare le domande che essi contengono ai relativi blocchi.
 
 \subsection{Ordine blocchi}
-Possiamo notare nel \autoref{json:survey_flow} come l'oggetto \texttt{SurveyFlow} contenga, in ordine di presentazione, gli ID dei blocchi da mostrare. Per rispettare tale ordine è necessario un incrocio di dati: leggendo i dati del campo \texttt{SurveyFlow} possiamo accedere all'oggetto \texttt{Blocks}, di cui possiamo osservare la struttura nel JSON \ref{json:blocks}, nel giusto ordine, utilizzando il \texttt{BlockID} come chiave di accesso.
+Possiamo notare nel \autoref{json:survey_flow} come l'oggetto \texttt{SurveyFlow} contenga, in ordine di presentazione, gli ID dei blocchi da mostrare. Per rispettare tale ordine è necessario un incrocio di dati: leggendo i dati del campo \texttt{SurveyFlow} possiamo accedere all'oggetto \texttt{Blocks}, di cui possiamo osservare la struttura nel \autoref{json:blocks}, nel giusto ordine, utilizzando il \texttt{BlockID} come chiave di accesso.
 
 \begin{json}
 \usemintedstyle[JSON]{trac}
@@ -210,7 +210,7 @@ In questa sezione saranno discusse le modalità in cui l'applicazione salva e or
 
 \subsection{Struttura dati}
 Le strutture dati scelte per questa applicazione sono le mappe \textit{(o Hash Tables, Hash Maps)}, questo perché abbiamo osservato che ogni entità fornita da Qualtrics è provvista di un ID e, in particolare, generalmente gli ID non seguono un ordine preciso \textit{(fanno eccezione i \texttt{QuestionID} che sono numerati in ordine di creazione, ma creando ed eliminando domande possono presentare comunque salti)}. Essendo poi gli ID univoci conviene sicuramente utilizzare una mappa per salvare i dati, utilizzando gli ID come chiave di ogni entità: in questo modo è possibile accedere velocemente ad una qualsiasi entità salvata utilizzando il suo ID, questo perché l'accesso ai valori di una mappa, conoscendo la chiave, richiede un tempo \textbf{O(1)}, ovvero costante\cite{hashmaps}.
-Inoltre, spesso i dati assumono strutture diverse \textit{(ad esempio i diversi tipi di domanda)} e, poiché Dart permette tramite la keyword \texttt{dynamic}, di avere oggetti di tipo diverso come valore di una mappa è sicuramente più semplice utilizzare delle mappe piuttosto che degli array per salvare questi dati.
+Inoltre, spesso i dati assumono strutture diverse \textit{(ad esempio i diversi tipi di domanda)} e poiché Dart permette, tramite la keyword \texttt{dynamic}, di avere oggetti di tipo diverso come valore di una mappa è sicuramente più semplice utilizzare delle mappe piuttosto che degli array per salvare questi dati.
 
 \subsection{Organizzazione dati}
 Per quanto riguarda l'organizzazione dei dati, per semplicità e per come sarebbero poi stati visualizzati i dati, si è scelto di creare una mappa esterna le cui chiavi sono i \texttt{SurveyID} e i valori delle ulteriori mappe che rappresentano i blocchi di ogni sondaggio.
@@ -223,8 +223,8 @@ In questa sezione saranno analizzati i vari tipi di domande che Qualtrics mette 
 
 \subsection{Text Entry - "QuestionType": "TE"}
 La più semplice domanda utilizzabile nel contesto di Qualtrics è la Text Entry: una domanda che mette a disposizione un campo di testo dove scrivere una risposta aperta.
-Possiamo osservare la struttura dati semplificata di questo tipo di domande nel JSON \ref{json:text_entry}. Notiamo in particolare, oltre al \texttt{QuestionText} e al \texttt{QuestionType} che definisce il tipo di domanda, che c'è anche un oggetto \texttt{Validation}: questo oggetto è presente in ogni domanda e serve per definire delle regole secondo le quali una risposta è giusta o meno, ne parleremo in modo più dettagliato successivamente.
-Qualtrics permette anche di definire se la risposta dovrebbe essere corta, media o lunga, modificando la dimensione del campo di testo: questa distinzione viene fatta tramite il campo \texttt{Selector} che vale \texttt{"SL"} \textit{(Single Line)} se la risposta è corta, \texttt{"ML"} \textit{(Multi Line)} se è media e \texttt{ESTB} \textit{(Essay Text Box)} se è lunga. Nell'applicazione viene letto questo campo e viene impostata una dimensione rispettivamente di una, 5 o 10 righe del campo di input. È importante notare tuttavia che questo limite non è fortemente restrittivo: seppur la dimensione del campo di input sia limitata, l'utente può comunque inserire una risposta più lunga, si tratta per lo più di una feature di quality of life. Possiamo osservare com'è renderizzata questa domanda rispettivamente nella webview di Qualtrics e nell'applicazione Flutter nella Figura \ref{fig:text_entry}.
+Possiamo osservare la struttura dati semplificata di questo tipo di domande nel \autoref{json:text_entry}. Notiamo in particolare, oltre al \texttt{QuestionText} e al \texttt{QuestionType} che definisce il tipo di domanda, che c'è anche un oggetto \texttt{Validation}: questo oggetto è presente in ogni domanda e serve per definire delle regole secondo le quali una risposta è giusta o meno, ne parleremo in modo più dettagliato successivamente.
+Qualtrics permette anche di definire se la risposta dovrebbe essere corta, media o lunga, modificando la dimensione del campo di testo: questa distinzione viene fatta tramite il campo \texttt{Selector} che vale \texttt{"SL"} \textit{(Single Line)} se la risposta è corta, \texttt{"ML"} \textit{(Multi Line)} se è media e \texttt{ESTB} \textit{(Essay Text Box)} se è lunga. Nell'applicazione viene letto questo campo e viene impostata una dimensione rispettivamente di una, 5 o 10 righe del campo di input. È importante notare tuttavia che questo limite non è fortemente restrittivo: seppur la dimensione del campo di input sia limitata, l'utente può comunque inserire una risposta più lunga, si tratta per lo più di una feature di quality of life. Possiamo osservare com'è renderizzata questa domanda rispettivamente nella webview di Qualtrics e nell'applicazione Flutter nella \autoref{fig:text_entry}.
 
 \subsubsection{Response}
 La risposta a questo tipo di domande è del tipo\\ \texttt{\{"QuestionID": "testo risposta"\}}, ovvero viene inserita come risposta la stringa stessa inserita dall'utente nel campo di input.
@@ -254,18 +254,18 @@ La risposta a questo tipo di domande è del tipo\\ \texttt{\{"QuestionID": "test
 
 \newpage
 \subsection{Multiple Choice - "QuestionType": "MC"}
-Un'altra domanda semplice e che ci si aspetta di trovare in qualsiasi applicazione che faccia uso di questionari è la Multiple Choice: la classica domanda a risposta chiusa che mette a disposizione dell'utente delle risposte predefinite da scegliere. Possiamo osservare la struttura semplificata di questo tipo di domanda nel JSON \ref{json:mc}. Anche in questo caso Qualtrics mette a disposizione un \texttt{Selector} che però, a differenza di prima, cambia maggiormente la domanda. Questo selettore può essere \texttt{SAVR}, \texttt{SAHR} o \texttt{SACOL} per le domande a risposta singola \textit{(SA = Single Answer)} che, sul web, possono essere visualizzate verticalmente, orizzontalmente o in colonna. Tuttavia nell'applicazione, per questioni di spazio disponibile, le risposte saranno visualizzate sempre verticalmente. Per le domande a risposta singola il selettore può assumere anche il valore \texttt{DL} \textit{(Dropdown List)} che permette di scegliere la risposta tramite un menù a tendina.
+Un'altra domanda semplice e che ci si aspetta di trovare in qualsiasi applicazione che faccia uso di questionari è la Multiple Choice: la classica domanda a risposta chiusa che mette a disposizione dell'utente delle risposte predefinite da scegliere. Possiamo osservare la struttura semplificata di questo tipo di domanda nel \autoref{json:mc}. Anche in questo caso Qualtrics mette a disposizione un \texttt{Selector} che però, a differenza di prima, cambia maggiormente la domanda. Questo selettore può essere \texttt{SAVR}, \texttt{SAHR} o \texttt{SACOL} per le domande a risposta singola \textit{(SA = Single Answer)} che, sul web, possono essere visualizzate verticalmente, orizzontalmente o in colonna. Tuttavia nell'applicazione, per questioni di spazio disponibile, le risposte saranno visualizzate sempre verticalmente. Per le domande a risposta singola il selettore può assumere anche il valore \texttt{DL} \textit{(Dropdown List)} che permette di scegliere la risposta tramite un menù a tendina.
 
-Allo stesso modo il selettore può assumere anche i valori \texttt{MAVR}, \texttt{MAHR} e \texttt{MACOL} \textit{(MA = Multiple Answers)} che permette alla domanda di avere più di una risposta scelta, influenzando così anche la risposta generata. Di conseguenza, come possiamo vedere nella Figura \ref{fig:mc}, in base al \texttt{Selector} l'applicazione costruirà diversi widget: uno per le risposte singole, uno col menù a tendina o uno per le risposte multiple.
+Allo stesso modo il selettore può assumere anche i valori \texttt{MAVR}, \texttt{MAHR} e \texttt{MACOL} \textit{(MA = Multiple Answers)} che permette alla domanda di avere più di una risposta scelta, influenzando così anche la risposta generata. Di conseguenza, come possiamo vedere nella \autoref{fig:mc}, in base al \texttt{Selector} l'applicazione costruirà diversi widget: uno per le risposte singole, uno col menù a tendina o uno per le risposte multiple.
 
 Possiamo anche notare che tra i vari dati della domanda ci sono le \texttt{Choices}, ovvero le possibili risposte col proprio testo opportunamente identificate \textit{(notiamo anche che gli ID sono in ordine di creazione, non di presentazione)}. Osserviamo anche il campo \texttt{ChoiceOrder} che contiene gli ID delle choices in ordine di presentazione \textit{(che può essere diverso dall'ordine nel quale sono presenti nel campo \texttt{Choices})}: sarà necessario anche in questo caso incrociare i dati come fatto precedentemente con i blocchi e le domande.
 
 \subsubsection{Media nelle opzioni}
 Come abbiamo visto prima, le opzioni di una domanda a risposta chiusa sono di fatto un oggetto: questo perché Qualtrics permette di inserire nelle scelte delle immagini o delle caselle di testo \textit{(per esempio per implementare un'opzione "Altro")} aggiungendo all'oggetto relativo alla Choice interessata rispettivamente i parametri \texttt{"Image": \{\}} \textit{(che conterrà l'url dell'immagine)} e \texttt{"TextEntry": "true"}.
-Possiamo osservare un esempio di questo tipo di risposte nella Figura \ref{fig:mc_media}.
+Possiamo osservare un esempio di questo tipo di risposte nella \autoref{fig:mc_media}.
 
 \subsubsection{Response}
-La risposta a queste domande dipende se la risposta è una sola o più di una: se la domanda accetta solo una risposta è del tipo \texttt{\{"QuestionID": ChoiceID\}}, ovvero è l'ID della risposta scelta reperibile dal campo \texttt{Choices} \textit{(notare l'assenza di apici)}, mentre se la domanda accetta risposte multiple è del tipo \texttt{\{"QuestionID": ["ChoiceID\_1", "ChoiceID\_2"]\}}, ovvero una lista con gli ID delle risposte scelte. Se l'opzione scelta contiene una text entry inoltre, nella risposta sarà presente anche il campo \texttt{"QuestionID\_TEXT": "testo risposta"}.
+La risposta a queste domande è diversa nel caso di risposta singola e nel caso di risposte multiple: se la domanda accetta solo una risposta è del tipo \texttt{\{"QuestionID": ChoiceID\}}, ovvero è l'ID della risposta scelta reperibile dal campo \texttt{Choices} \textit{(notare l'assenza di apici)}, mentre se la domanda accetta risposte multiple è del tipo \texttt{\{"QuestionID": ["ChoiceID\_1", "ChoiceID\_2"]\}}, ovvero una lista con gli ID delle risposte scelte. Se l'opzione scelta contiene una text entry inoltre, nella risposta sarà presente anche il campo \texttt{"QuestionID\_TEXT": "testo risposta"}.
 
 \begin{json}
 \usemintedstyle[JSON]{trac}
@@ -314,7 +314,7 @@ La risposta a queste domande dipende se la risposta è una sola o più di una: s
 
 \clearpage
 \subsection{NPS - "QuestionType": "MC"}
-Un tipo particolare di domanda Multiple Choice che viene però trattato da Qualtrics come un tipo separato è il \textbf{Net Promoter Score}, una domanda che richiede di assegnare un punteggio da 0 a 10 a un qualcosa. Possiamo osservarne la struttura nel JSON \ref{json:nps} e notiamo che quello che la distingue dalle altre domande di tipo MC è il \texttt{Selector} di tipo \texttt{NPS}, e che contiene delle label nel campo \texttt{ColumnLabels} utili a dare un'idea del giudizio che si sta dando. Possiamo osservare un esempio di questa domanda nella Figura \ref{fig:nps}.
+Un tipo particolare di domanda Multiple Choice che viene però trattato da Qualtrics come un tipo separato è il \textbf{Net Promoter Score}, una domanda che richiede di assegnare un punteggio da 0 a 10 a un qualcosa. Possiamo osservarne la struttura nel \autoref{json:nps} e notiamo che quello che la distingue dalle altre domande di tipo MC è il \texttt{Selector} di tipo \texttt{NPS}, e che contiene delle label nel campo \texttt{ColumnLabels} utili a dare un'idea del giudizio che si sta dando. Possiamo osservare un esempio di questa domanda nella \autoref{fig:nps}.
 
 \subsubsection{Response}
 La risposta a questo tipo di domanda è del tipo \texttt{\{"QuestionID": numero\}}.
@@ -359,7 +359,7 @@ La risposta a questo tipo di domanda è del tipo \texttt{\{"QuestionID": numero\
 
 \clearpage
 \subsection{Matrix Table - "QuestionType": "Matrix"}
-Uno dei tipi più complessi di domanda messi a disposizione da Qualtrics è il tipo Matrix: una serie di diverse domande che però hanno le stesse risposte \textit{(o lo stesso tipo di risposta)}. Questo tipo di domande sono utili per quando sono necessarie più domande che dovrebbero essere valutate su una stessa scala. Possiamo osservare la struttura di queste domande nel JSON \ref{json:matrix}. Notiamo che, almeno in parte, somiglia molto ad una domanda di tipo Multiple Choices: anche la matrice presenta delle \texttt{Choices} ordinate secondo un \texttt{ChoiceOrder}, ma presenta anche un secondo gruppo di elementi, le \texttt{Answers}, ordinate anch'esse secondo un \texttt{AnswerOrder}.
+Uno dei tipi più complessi di domanda messi a disposizione da Qualtrics è il tipo Matrix: una serie di diverse domande che però hanno le stesse risposte \textit{(o lo stesso tipo di risposta)}. Questo tipo di domande sono utili per quando sono necessarie più domande che dovrebbero essere valutate su una stessa scala. Possiamo osservare la struttura di queste domande nel \autoref{json:matrix}. Notiamo che, almeno in parte, somiglia molto ad una domanda di tipo Multiple Choices: anche la matrice presenta delle \texttt{Choices} ordinate secondo un \texttt{ChoiceOrder}, ma presenta anche un secondo gruppo di elementi, le \texttt{Answers}, ordinate anch'esse secondo un \texttt{AnswerOrder}.
 Possiamo pensare alle \texttt{Choices} come alle risposte vere e proprie, uguali per tutte le domande, e alle \texttt{Answers} come alle domande da valutare \textit{(la scelta dei nomi da parte di Qualtrics non è delle migliori in questo caso)}. Un altro modo per visualizzare il tutto è pensare ad una tabella	dove le \texttt{Choices} identificano le colonne e le \texttt{Answers} le righe \textit{(che è anche il metodo in cui Qualtrics mostra, nella variante web, queste domande)}. Le matrici inoltre, come le NPS, supportano le label.
 
 Nel JSON possiamo anche notare, oltre al "classico" \texttt{Selector} già visto in precedenza, anche un \texttt{SubSelector} che svolge la funzione del \texttt{Selector} di prima, ovvero permette di scegliere il tipo di risposta che la domanda accetta. Mentre il \texttt{Selector} delle matrici serve a cambiare radicalmente il sotto-tipo di domanda: Qualtrics mette a disposizione diversi tipi di matrice, oltre che diversi tipi di risposte per esse.
@@ -368,7 +368,7 @@ Nel JSON possiamo anche notare, oltre al "classico" \texttt{Selector} già visto
 Come per le Multiple Choice, anche in queste domande è possibile inserire delle immagini e delle text entry nelle \texttt{Choices}, mentre per le \texttt{Answers} è possibile solo inserire delle immagini.
 
 \subsubsection{Response}
-In questo caso le response sono identificare, oltre che dal \texttt{QuestionID}, anche dal \texttt{ChoiceID}, la chiave difatti è \texttt{QuestionID\_ChoiceID}. La risposta vera e propria tuttavia cambia, oltre che dal tipo di risposta che accetta la matrice, dal tipo stesso di matrice.
+In questo caso le response sono identificate, oltre che dal \texttt{QuestionID}, anche dal \texttt{ChoiceID}, la chiave difatti è \texttt{QuestionID\_ChoiceID}. La risposta vera e propria tuttavia cambia, oltre che in base al tipo di risposta che accetta la matrice, anche in base al tipo stesso di matrice.
 
 \begin{json}
 \usemintedstyle[JSON]{trac}
@@ -417,7 +417,7 @@ In questo caso le response sono identificare, oltre che dal \texttt{QuestionID},
 \end{json}
 
 \subsubsection{Matrix: "Selector": "Likert"}
-Il primo tipo di matrice messo a disposizione da Qualtrics è la matrice likert, una matrice che contiene di fatto delle domande simili alle multiple choice. Tramite il \texttt{Subselector} è possibile stabilire anche se le risposte debbano essere singole (\texttt{SingleAnswer}), multiple (\texttt{MultipleAnswer}) o singole con menù a tendina (\texttt{DL}). Possiamo osservare un esempio di questo tipo di domande nella Figura \ref{fig:matrix_likert}; in particolare è possibile notare come è stato scelto di mantenere un design coerente con le multiple choice, in modo da richiamare quel tipo di domande anche dal punto di vista del design, oltre che per le funzionalità. Questo tipo di matrici supporta anche un formato \texttt{Profile} che permette di avere delle risposte diverse per ogni sotto-domanda \textit{(ma devono tuttavia essere dello stesso tipo)}.
+Il primo tipo di matrice messo a disposizione da Qualtrics è la matrice likert, una matrice che contiene di fatto delle domande simili alle multiple choice. Tramite il \texttt{Subselector} è possibile stabilire anche se le risposte debbano essere singole (\texttt{SingleAnswer}), multiple (\texttt{MultipleAnswer}) o singole con menù a tendina (\texttt{DL}). Possiamo osservare un esempio di questo tipo di domande nella \autoref{fig:matrix_likert}; in particolare è possibile notare come è stato scelto di mantenere un design coerente con le multiple choice, in modo da richiamare quel tipo di domande anche dal punto di vista del design, oltre che per le funzionalità. Questo tipo di matrici supporta anche un formato \texttt{Profile} che permette di avere delle risposte diverse per ogni sotto-domanda \textit{(ma devono tuttavia essere dello stesso tipo)}.
 
 \paragraph{Response:}
 Le risposte sono del tipo \texttt{\{"QuestionID\_ChoiceID": AnswerID\}} nel caso di risposta singola e del tipo \texttt{\{"QuestionID\_ChoiceID": ["AnswerID\_1", "AnswerID\_2"]\}} nel caso di risposta multipla. Nel caso un'opzione prevedesse una text entry, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
@@ -430,7 +430,7 @@ Le risposte sono del tipo \texttt{\{"QuestionID\_ChoiceID": AnswerID\}} nel caso
 \end{figure}
 
 \subsubsection{Matrix: "Selector": "Bipolar"}
-Le matrici di tipo Bipolar permettono di selezionare una risposta che si avvicini di più ad una di due possibili scelte. Permettono dunque solo risposte singole. Il testo delle \texttt{Choice} tuttavia è "separato" in due parti utilizzando il carattere ':'. Se viene utilizzato tale carattere nel testo stesso delle scelte tuttavia questo viene preceduto da una coppia di caratteri di escape da Qualtrics. È stato dunque necessario identificare e trattare nel modo desiderato tale escaping nell'applicazione, operazione eseguita tramite delle espressioni regolari che, nel caso trovassero una espressione '\textbackslash\textbackslash:' rimuovessero i caratteri di escape e stampassero il ':', mentre nel caso trovassero un ':' senza escaping dividessero la stringa in due, in modo da avere parte destra e sinistra del testo della scelta. Possiamo osservare un esempio di questa domanda nella Figura \ref{fig:matrix_bipolar} dove possiamo anche osservare come la webview mobile di Qualtrics non sia ottimale e non sopporti nemmeno le label.
+Le matrici di tipo Bipolar permettono di selezionare una risposta che si avvicini di più ad una di due possibili scelte. Permettono dunque solo risposte singole. Il testo delle \texttt{Choice} tuttavia è "separato" in due parti utilizzando il carattere ':'. Se viene utilizzato tale carattere nel testo stesso delle scelte tuttavia questo viene preceduto da una coppia di caratteri di escape da Qualtrics. È stato dunque necessario identificare e trattare nel modo desiderato tale escaping nell'applicazione, operazione eseguita tramite delle espressioni regolari che, nel caso trovassero una espressione '\textbackslash\textbackslash:' rimuovessero i caratteri di escape e stampassero il ':', mentre nel caso trovassero un ':' senza escaping dividessero la stringa in due, in modo da avere parte destra e sinistra del testo della scelta. Possiamo osservare un esempio di questa domanda nella \autoref{fig:matrix_bipolar} dove possiamo anche osservare come la webview mobile di Qualtrics non sia ottimale e non sopporti nemmeno le label.
 
 \paragraph{Response:}
 Le risposte, essendo una matrice che accetta solo risposte singole, sono del tipo \texttt{\{"QuestionID\_ChoiceID": AnswerID\}}.
@@ -444,7 +444,7 @@ Le risposte, essendo una matrice che accetta solo risposte singole, sono del tip
 
 \clearpage
 \subsubsection{Matrix: "Selector": "MaxDiff"}
-Un altro tipo di matrice che supporta solo risposte singole è il MaxDiff che è il sotto-tipo duale delle Bipolar: permette di scegliere solo tra due risposte \textit{(ad esempio Si/No)}. Non hanno il problema della divisione del testo delle opzioni dunque. Possiamo osservare un esempio di questo tipo di domanda nella Figura \ref{fig:matrix_maxdiff}.
+Un altro tipo di matrice che supporta solo risposte singole è il MaxDiff che è il sotto-tipo duale delle Bipolar: permette di scegliere solo tra due risposte \textit{(ad esempio Si/No)}. Non hanno il problema della divisione del testo delle opzioni dunque. Possiamo osservare un esempio di questo tipo di domanda nella \autoref{fig:matrix_maxdiff}.
 
 \paragraph{Response:}
 Anche in questo caso, essendo una domanda che accetta solo risposte singole, le risposte sono del tipo \texttt{\{"QuestionID\_ChoiceID": AnswerID\}}.
@@ -458,10 +458,10 @@ Anche in questo caso, essendo una domanda che accetta solo risposte singole, le 
 
 \clearpage
 \subsubsection{Matrix: "Selector": "TextEntry"}
-Una matrice simile alle Likert è la matrice Text Entry che, invece che avere delle risposte chiuse, permette di scrivere una risposta aperta per ogni sotto-domanda. Possiamo notare in Figura \ref{fig:matrix_te} come anche lo stile adottato richiama molto le matrici Likert, proprio per creare un design coerente in tutta l'applicazione.
+Una matrice simile alle Likert è la matrice Text Entry che, invece che avere delle risposte chiuse, permette di scrivere una risposta aperta per ogni sotto-domanda. Possiamo notare in \autoref{fig:matrix_te} come anche lo stile adottato richiama molto le matrici Likert, proprio per creare un design coerente in tutta l'applicazione.
 
 \paragraph{Response:}
-Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": "testo"\}}.\\Nel caso un'opzione prevedesse una text entry aggiuntiva, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
+Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": "testo"\}}.\\Nel caso un'opzione prevedesse una text entry aggiuntiva, la risposta a tale text entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \begin{figure}[h!]
 \centering
@@ -472,7 +472,7 @@ Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_Cho
 
 \clearpage
 \subsubsection{Matrix: "Selector": "RO"}
-Anche le matrici di tipo Rank Order somigliano molto alle matrici Likert, ma hanno un campo di input in cui l'utente può inserire un numero: queste domande richiedono all'utente di definire un ordine tra le varie opzioni assegnando dei numeri interi ad ogni opzione. Possiamo notare nella Figura \ref{fig:matrix_ro} come lo stile adottato sia molto simile allo stile delle matrici Text Entry ma con un campo di input minore, essendo necessario meno spazio per inserire dei numeri.
+Anche le matrici di tipo Rank Order somigliano molto alle matrici Likert, ma hanno un campo di input in cui l'utente può inserire un numero: queste domande richiedono all'utente di definire un ordine tra le varie opzioni assegnando dei numeri interi ad ogni opzione. Possiamo notare nella \autoref{fig:matrix_ro} come lo stile adottato sia molto simile allo stile delle matrici Text Entry ma con un campo di input minore, essendo necessario meno spazio per inserire dei numeri.
 
 \paragraph{Response:}
 Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": numero\}}.\\Nel caso un'opzione prevedesse una text entry, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
@@ -486,7 +486,7 @@ Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_Cho
 
 \clearpage
 \subsubsection{Matrix: "Selector": "CS"}
-Anche questo ultimo tipo di matrici è simile alle Text Entry: permette di inserire dei numeri come le Rank Order ma che non hanno lo scopo di ordinare le risposte. Queste matrici riportano infine la somma di tutti i numeri inseriti nelle varie opzioni. È possibile osservare nella Figura \ref{fig:matrix_cs} come lo stile adottato sia molto simile alle matrici Rank Order, visto che accettano lo stesso tipo di input.
+Anche questo ultimo tipo di matrici è simile alle Text Entry: permette di inserire dei numeri come le Rank Order ma che non hanno lo scopo di ordinare le risposte. Queste matrici riportano infine la somma di tutti i numeri inseriti nelle varie opzioni. È possibile osservare nella \autoref{fig:matrix_cs} come lo stile adottato sia molto simile alle matrici Rank Order, visto che accettano lo stesso tipo di input.
 
 \paragraph{Response:}
 Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": numero\}}.\\Nel caso un'opzione prevedesse una text entry, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
@@ -500,13 +500,13 @@ Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_Cho
 
 \clearpage
 \subsection{Side By Side - "QuestionType": "SBS"}
-Il tipo di domanda Side By Side è un'evoluzione delle matrici precedenti: questo tipo di domanda permette di avere domande completamente diverse in un'unica tabella \textit{(quindi che abbiano anche risposte di diverso tipo, oltre che diverse come nelle matrici profile)}. In particolare, i tipi di risposta possono essere Single Answer, SA con menù a tendina, Multiple Answers e Text Entry. Inoltre, come possiamo vedere nella Figura \ref{fig:sbs}, a differenza delle matrici semplici è possibile anche definire un numero di risposte variabile per ogni sotto-domanda. Possiamo osservare la struttura di questo tipo di domande nel JSON \ref{json:sbs} ed è subito notabile una particolarità: nell'oggetto \texttt{AdditionalQuestions} vengono salvati effettivamente degli oggetti che descrivono delle matrici come visto precedentemente, ognuna con le proprie \texttt{Answers} \textit{(le \texttt{Choices} sono le stesse dell'oggetto SBS stesso)} e soprattutto ognuna col proprio \texttt{QuestionID}, parametro molto importante per costruire poi le risposte.
+Il tipo di domanda Side By Side è un'evoluzione delle matrici precedenti: questo tipo di domanda permette di avere domande completamente diverse in un'unica tabella \textit{(quindi che abbiano anche risposte di diverso tipo, oltre che diverse come nelle matrici profile)}. In particolare, i tipi di risposta possono essere Single Answer, SA con menù a tendina, Multiple Answers e Text Entry. Inoltre, come possiamo vedere nella \autoref{fig:sbs}, a differenza delle matrici semplici è possibile anche definire un numero di risposte variabile per ogni sotto-domanda. Possiamo osservare la struttura di questo tipo di domande nel \autoref{json:sbs} ed è subito notabile una particolarità: nell'oggetto \texttt{AdditionalQuestions} vengono salvati effettivamente degli oggetti che descrivono delle matrici come visto precedentemente, ognuna con le proprie \texttt{Answers} \textit{(le \texttt{Choices} sono le stesse dell'oggetto SBS stesso)} e soprattutto ognuna col proprio \texttt{QuestionID}, parametro molto importante per costruire poi le risposte.
 
 \subsubsection{Media}
 Come per le matrici, anche le Side By Side supportano immagini su \texttt{Choices} e \texttt{Answers} e text entry aggiuntive sulle \texttt{Choices}.
 
 \subsubsection{Response}
-Avendo la domanda più domande interne indipendenti, le risposte sono separate e sono identificate da \texttt{QuestionID\#SubQuestionID\_ChoiceID} \textit{(il SubQuestionID è quello riportarto nel campo QuestionID delle domande nel campo AdditionalQuestions)}. Le risposte sono dunque del tipo\\ \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": AnswerID\}} per una risposta singola, \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": [AnswerID\_1, AnswerID\_2]\}}\\ per risposte multiple e \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": "testo"\}} nel caso di text entry. \\
+Avendo la domanda più domande interne indipendenti, le risposte sono separate e sono identificate da \texttt{QuestionID\#SubQuestionID\_ChoiceID} \textit{(il SubQuestionID è quello riportarto nel campo QuestionID delle sotto-domande nel campo AdditionalQuestions)}. Le risposte sono dunque del tipo\\ \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": AnswerID\}} per una risposta singola, \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": ["AnswerID\_1", "AnswerID\_2"]\}}\\ per risposte multiple e \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": "testo"\}} nel caso di text entry. \\
 Nel caso fossero presenti text entry addizionali sulle \texttt{Choices}, la risposta a tali text entry è del tipo \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \newpage
@@ -544,8 +544,8 @@ Nel caso fossero presenti text entry addizionali sulle \texttt{Choices}, la risp
 
 \clearpage
 \subsection{Slider - "QuestionType": "Slider"}
-Un tipo di domanda molto utile messo a disposizione da Qualtrics è lo Slider, ovvero una domanda la cui risposta è esprimibile attraverso dei cursori interattivi, utile ad esprimere ad esempio livelli di preferenza o di intensità. Possiamo osservare la struttura di queste domande nel JSON \ref{json:slider}, in particolare possiamo osservare che una domanda di questo tipo può avere diversi slider, identificati dalle \texttt{Choices} e che, se impostato in modo che assuma solo determinati valori, questi sono presenti nel campo \texttt{Answers}. Di particolare interesse è il campo \texttt{Configuration} che permette di impostare alcuni parametri dello slider come potrebbero essere i valori minimi e massimi, determinati dai campi \texttt{CSSliderMin} e \texttt{CSSliderMax}. Se inoltre l'opzione \texttt{SnapToGrid} è true, lo slider assumerà solo i valori delle \texttt{GridLines} (quindi assumerà solo multipli di \texttt{CSSliderMax} / \texttt{GridLines}). Tramite la configurazione possiamo definire anche quali valori iniziali dovrà assumere ciascun slider, contenuti nel campo \texttt{SliderStartPositions}.
-Per lo sviluppo di questo widget è stato utilizzato come base lo slider generale messo a disposizione da Flutter modificato in termini di aspetto e di funzionalità per supportare i valori iniziali e lo snap to grid. Possiamo osservare anche come sono visibili le grid lines all'interno dello slider stesso nella Figura \ref{fig:slider}.
+Un tipo di domanda molto utile messo a disposizione da Qualtrics è lo Slider, ovvero una domanda la cui risposta è esprimibile attraverso dei cursori interattivi, utile ad esprimere ad esempio livelli di preferenza o di intensità. Possiamo osservare la struttura di queste domande nel \autoref{json:slider}, in particolare possiamo osservare che una domanda di questo tipo può avere diversi slider, identificati dalle \texttt{Choices} e che, se impostato in modo che assuma solo determinati valori, questi sono presenti nel campo \texttt{Answers}. Di particolare interesse è il campo \texttt{Configuration} che permette di impostare alcuni parametri dello slider come potrebbero essere i valori minimi e massimi, determinati dai campi \texttt{CSSliderMin} e \texttt{CSSliderMax}. Se inoltre l'opzione \texttt{SnapToGrid} è attiva, lo slider assumerà solo i valori delle \texttt{GridLines} (quindi assumerà solo multipli di \texttt{CSSliderMax} / \texttt{GridLines}). Tramite la configurazione possiamo definire anche quali valori iniziali dovrà assumere ciascun slider, contenuti nel campo \texttt{SliderStartPositions}.
+Per lo sviluppo di questo widget è stato utilizzato come base lo slider generale messo a disposizione da Flutter modificato in termini di aspetto e di funzionalità per supportare i valori iniziali e lo snap to grid. Possiamo osservare anche come sono visibili le grid lines all'interno dello slider stesso nella \autoref{fig:slider}.
 
 \subsubsection{Media}
 Anche in questo caso è possibile associare ad ogni \texttt{Choice} \textit{(quindi ad ogni slider in questo caso)} un'immagine e una text entry aggiuntiva.
@@ -608,7 +608,7 @@ Le risposte a questo tipo di domande sono del tipo \texttt{\{"QuestionID\_Choice
 
 \clearpage
 \subsection{Rank Order - "QuestionType": "RO"}
-Uno dei tipi di domanda più creativi di Qualtrics è il tipo Rank Order che richiede all'utente, dati degli item, di ordinarli ad esempio per ordine di importanza. Questo ordinamento generalmente viene fatto trascinando gli item l'uno sopra l'altro in una lista: è stato dunque necessario implementare un tipo di lista che permettesse questa interazione. Come possiamo osservare nella Figura \ref{fig:rank_order}, per evitare ordinamenti accidentali è stato scelto, a differenza di come viene fatto nativamente da Qualtrics, di utilizzare un handler che ricevesse l'input di trascinamento ad ogni item. Successivamente, per migliorare ancor di più l'usabilità, è stato scelto di aggiungere anche dei pulsanti che permettessero di scambiare una posizione all'interno della lista in maniera semplice ed efficace. Possiamo osservare la struttura di questa domanda nel JSON \ref{json:rank_order} e notiamo che di fatto gli item non sono altro che delle \texttt{Choices}.
+Uno dei tipi di domanda più creativi di Qualtrics è il tipo Rank Order che richiede all'utente, dati degli item, di ordinarli ad esempio per ordine di importanza. Questo ordinamento generalmente viene fatto trascinando gli item l'uno sopra l'altro in una lista: è stato dunque necessario implementare un tipo di lista che permettesse questa interazione. Come possiamo osservare nella \autoref{fig:rank_order}, per evitare ordinamenti accidentali è stato scelto, a differenza di come viene fatto nativamente da Qualtrics, di utilizzare un handler che ricevesse l'input di trascinamento di ogni item. Successivamente, per migliorare ancor di più l'usabilità, è stato scelto di aggiungere anche dei pulsanti che permettessero di scambiare una posizione all'interno della lista in maniera semplice ed efficace. Possiamo osservare la struttura di questa domanda nel \autoref{json:rank_order} e notiamo che di fatto gli item non sono altro che delle \texttt{Choices}.
 
 \subsubsection{Media}
 Come visto in precedenza, anche in questo caso è possibile assegnare alle \texttt{Choices} un'immagine e una text entry aggiuntiva.
@@ -651,7 +651,7 @@ Le risposte a questo tipo di domande sono del tipo \texttt{\{"QuestionID\_Choice
 
 \clearpage
 \subsection{Pick, Group and Rank - "QuestionType": "PGR"}
-Un'evoluzione delle domande di tipo Rank Order sono le Pick, Group and Rank che sostanzialmente sono sempre delle Rank Order ma con più liste: la domanda richiede, oltre che di ordinare gli item di una lista, di assegnare gli item ad una delle liste disponibili. Come possiamo vedere nella Figura \ref{fig:PGR}, anche qui sono stati fatti dei cambiamenti per migliorare l'usabilità su mobile: in particolare, per cambiare la lista di un item, non solo è possibile trascinarlo nella lista corrispondente, ma cliccandoci sopra apparirà una finestra di dialogo che permetterà il cambio di lista senza alcun trascinamento. Possiamo osservare la struttura di questo tipo di domanda nel JSON \ref{json:PGR}; possiamo vedere come sia molto simile alle domande Rank Order con l'aggiunta di un campo \texttt{Groups} che identifica le liste disponibili.
+Un'evoluzione delle domande di tipo Rank Order sono le Pick, Group and Rank che sostanzialmente sono sempre delle Rank Order ma con più liste: la domanda richiede, oltre che di ordinare gli item di una lista, di assegnare gli item ad una delle liste disponibili. Come possiamo vedere nella \autoref{fig:PGR}, anche qui sono stati fatti dei cambiamenti per migliorare l'usabilità su mobile: in particolare, per cambiare la lista di un item, non solo è possibile trascinarlo nella lista corrispondente, ma cliccandoci sopra apparirà una finestra di dialogo che permetterà il cambio di lista senza alcun trascinamento. Possiamo osservare la struttura di questo tipo di domanda nel \autoref{json:PGR}; possiamo vedere come sia molto simile alle domande Rank Order con l'aggiunta di un campo \texttt{Groups} che identifica le liste disponibili.
 
 \subsubsection{Media}
 Anche in questo caso è possibile assegnare alle \texttt{Choices} un'immagine e una text entry aggiuntiva.
@@ -688,7 +688,7 @@ Nel caso ci fosse una text entry aggiuntiva, la risposta sarà del tipo \texttt{
 \end{figure}
 
 \subsection{Description Box - "QuestionType": "DB"}
-Infine, l'ultima entità messa a disposizione da Qualtrics è la Description Box, un "domanda" che contiene solo il testo ed eventualmente dei media \textit{(di cui parleremo nella sezione successiva)}, utile ad esempio per fornire delle spiegazioni all'utente prima che affronti un questionario.
+Infine, l'ultima entità messa a disposizione da Qualtrics è la Description Box, una "domanda" che contiene solo il testo ed eventualmente dei media \textit{(di cui parleremo nella sezione successiva)}, utile ad esempio per fornire delle spiegazioni all'utente prima che affronti un questionario.
 
 \section{Question Text}
 Abbiamo visto nella sezione precedente che c'è un elemento comune a tutte le domande di Qualtrics: tutte presentano un testo di domanda, che a prima vista può sembrare del semplice testo, ma che in realtà è altamente personalizzabile e ha quindi richiesto del codice specifico che lo mostrasse nel modo giusto.
@@ -696,7 +696,7 @@ Abbiamo visto nella sezione precedente che c'è un elemento comune a tutte le do
 \subsection{Media}
 Un aspetto molto utile di questo testo è che Qualtrics permette di inserirvi dei media di accompagnamento come immagini, video e/o audio. A differenza delle domande però, quando viene inserito un media nel testo della domanda questo viene tradotto in un tag \texttt{HTML} adeguato \textit{(in modo che il browser non deva fare nessun lavoro aggiuntivo per visualizzare i media)}; quando viene inserita un'immagine viene creato un tag \texttt{<img src="" />}, per un video viene usato un tag \texttt{<video> <source src="" </source> </video>} mentre per un audio viene usato un tag \texttt{<audio> <source src=""> </source> </audio>}. I tag vengono concatenati all'eventuale plain text.
 
-L'applicazione dunque, prima di mostrare a schermo il testo fornito dalle API, lo analizza in cerca di questi tag e, ogni qual volta ne incontra uno, aggiunge il parametro \texttt{src} ad una lista di sorgenti in base al media da mostrare. Successivamente, utilizzando delle espressioni regolari, l'applicazione elimina completamente i tag media dal testo, in modo che non vengano poi mostrati a schermo. A questo punto, utilizzando le liste di sorgenti siamo in grado di renderizzare i media desiderati insieme al testo "pulito". Possiamo osservare alcuni media nella Figura \ref{fig:media_vari}.
+L'applicazione dunque, prima di mostrare a schermo il testo fornito dalle API, lo analizza in cerca di questi tag e, ogni qual volta ne incontra uno, aggiunge il parametro \texttt{src} ad una lista di sorgenti in base al media da mostrare. Successivamente, utilizzando delle espressioni regolari, l'applicazione elimina completamente i tag media dal testo, in modo che non vengano poi mostrati a schermo. A questo punto, utilizzando le liste di sorgenti siamo in grado di renderizzare i media desiderati insieme al testo "pulito". Possiamo osservare alcuni media nella \autoref{fig:media_vari}.
 
 \begin{figure}[h!]
 \centering
@@ -706,11 +706,11 @@ L'applicazione dunque, prima di mostrare a schermo il testo fornito dalle API, l
 \end{figure}
 
 \subsection{YouTube support}
-Purtroppo, per quanto riguarda i video, Qualtrics offre poco spazio di archiviazione e la soluzione è caricare i video in file server dal quale ottenere il link allo stream diretto \textit{(e creando i tag video di prima)}, oppure caricare i vari video su YouTube, inserendo un iframe nella domanda. Sfortunatamente, di base i link di YouTube non sono link diretti allo stream video e di conseguenza non funzionano col lettore video utilizzato per quel tipo di link \textit{(anche se sono ottenibili tramite procedure non ovvie, ma sono stream separati per audio e video e non ho la sicurezza che siano in linea con i termini d'uso di YouTube)}. La soluzione è stata utilizzare un iframe vero e proprio anche nell'applicazione, seppur leggermente mascherato per avere un aspetto più nativo.
+Purtroppo, per quanto riguarda i video, Qualtrics offre poco spazio di archiviazione e la soluzione è caricare i video in un file server dal quale ottenere il link allo stream diretto \textit{(e creando i tag video di prima)}, oppure caricare i vari video su YouTube, inserendo un iframe nella domanda. Sfortunatamente, di base i link di YouTube non sono link diretti allo stream video e di conseguenza non funzionano col lettore video utilizzato per quel tipo di link \textit{(anche se sono ottenibili tramite procedure non ovvie, ma sono stream separati per audio e video e non ho la sicurezza che siano in linea con i termini d'uso di YouTube)}. La soluzione è stata utilizzare un iframe vero e proprio anche nell'applicazione, seppur leggermente mascherato per avere un aspetto più nativo.
 
 \subsection{Rich Text Editor}
 Qualtrics permette inoltre di modificare il testo della domanda tramite un rich text editor, ovvero tramite un editor che permette di assegnare dello stile al testo che può essere grassetto, corsivo, sottolineato ma anche colorato, con lo sfondo colorato, in elenco puntato e così via. Questo è il motivo per il quale, in tutti gli screen visti fino ad ora, il testo appare "semplice": la scelta di modificarlo e dargli enfasi è stata lasciata a chi crea le domande, mentre l'applicazione ricrea tale stile.
-Per realizzare tutto ciò è stato seguito un approccio simile a quello per i media: per creare questi stili vengono utilizzati dei tag \texttt{HTML} che l'applicazione individua e, utilizzando un widget di tipo \texttt{RichText}, che permette di avere diversi widget \texttt{TextSpan} con diversi stili di testo ciascuno, ricrea lo stile desiderato eliminando dal testo poi i tag. Possiamo osservare un esempio di testo editato nella Figura \ref{fig:rich_text}.
+Per realizzare tutto ciò è stato seguito un approccio simile a quello per i media: per creare questi stili vengono utilizzati dei tag \texttt{HTML} che l'applicazione individua e, utilizzando un widget di tipo \texttt{RichText}, che permette di avere diversi widget \texttt{TextSpan} con diversi stili di testo ciascuno, ricrea lo stile desiderato eliminando dal testo poi i tag. Possiamo osservare un esempio di testo editato nella \autoref{fig:rich_text}.
 
 \begin{figure}[h!]
 \centering
@@ -720,7 +720,7 @@ Per realizzare tutto ciò è stato seguito un approccio simile a quello per i me
 \end{figure}
 
 \section{Validation}
-Quando abbiamo parlato di domande abbiamo visto che un altro parametro comune a tutte è la cosiddetta \texttt{Validation}: questo oggetto contiene una serie di regole logiche \textit{(definibili da chi crea le domande tramite l'ambiente Qualtrics)} che definiscono se una certa risposta è giusta o meno. Queste regole sono varie e possono definire delle risposte che devono essere scelte, risposte che non devono essere scelte, un numero minimo di scelte e così via. Un esempio di validation è visibile nel JSON \ref{json:validation}.
+Quando abbiamo parlato di domande abbiamo visto che un altro parametro comune a tutte è la cosiddetta \texttt{Validation}: questo oggetto contiene una serie di regole logiche \textit{(definibili da chi crea le domande tramite l'ambiente Qualtrics)} che definiscono se una certa risposta è giusta o meno. Queste regole sono varie e possono definire delle risposte che devono essere scelte, risposte che non devono essere scelte, un numero minimo di scelte e così via. Un esempio di validation è visibile nel \autoref{json:validation}.
 
 \begin{json}
 \usemintedstyle[JSON]{trac}
@@ -778,10 +778,10 @@ Alcuni operatori sono:
 \item \textbf{greaterThanLength} - selezionate un numero > \textit{n} di scelte
 \item \textbf{greaterThanEqualLength} - selezionate un numero $\geq$ \textit{n} di scelte
 \item \textbf{lessThanLength} - selezionate un numero < \textit{n} di scelte
-\item \textbf{lesThanEqualLength} - selezionate un numero $\leq$ \textit{n} di scelte
+\item \textbf{lessThanEqualLength} - selezionate un numero $\leq$ \textit{n} di scelte
 \end{itemize}
 
-In particolare, l'esempio visto nel JSON \ref{json:validation} viene tradotto nella struttura visibile nel JSON \ref{json:validation_tradotta}, ovvero considera in AND le regole \textbf{whitelist} \textit{(must be selected)} e \textbf{equalLength} \textit{(devono esserne selezionate esattamente n)} che hanno come posizione 0, il tutto considerato poi in OR con la regola \textbf{greaterThanEqualLength} \textit{(devono esserne selezionate un numero >= n)} che ha posizione 1.
+In particolare, l'esempio visto nel \autoref{json:validation} viene tradotto nella struttura visibile nel \autoref{json:validation_tradotta}, ovvero considera in AND le regole \textbf{whitelist} \textit{(must be selected)} e \textbf{equalLength} \textit{(devono esserne selezionate esattamente n)} che hanno come posizione 0, il tutto considerato poi in OR con la regola \textbf{greaterThanEqualLength} \textit{(devono esserne selezionate un numero >= n)} che ha posizione 1.
 
 \begin{json}
 \usemintedstyle[JSON]{trac}
@@ -810,7 +810,7 @@ In particolare, l'esempio visto nel JSON \ref{json:validation} viene tradotto ne
 \end{json}
 
 \subsection{Risposta in app}
-Per gestire la struttura dati di validazione, che è condivisa fra le varie domande, è stato creato un \texttt{provider} che permettesse così di aggiungere le regole in fase di lettura delle domande dalle API e di consultarle in fase di controllo. In particolare, se il controllo fallisce l'applicazione evidenzia la domanda con un alone rosso come possiamo osservare nella Figura \ref{fig:validation_errata}.
+Per gestire la struttura dati di validazione, che è condivisa fra le varie domande, è stato creato un \texttt{provider} che permettesse così di aggiungere le regole in fase di lettura delle domande dalle API e di consultarle in fase di controllo. In particolare, se il controllo fallisce l'applicazione evidenzia la domanda con un alone rosso come possiamo osservare nella \autoref{fig:validation_errata}.
 
 \begin{figure}[h!]
 \centering
@@ -882,7 +882,7 @@ In particolare, le fasce di rischio sono:
 \subsection{Burnout}
 Il rischio di burnout viene calcolato tramite la scala \textbf{School Burnout Inventory \textit{(SBI)}}\cite{SBI} che si suddivide in tre sotto-scale: \textbf{Esaurimento a scuola}, \textbf{Cinismo verso la scuola} e  \textbf{Senso di inadeguatezza a scuola}, ognuna delle quali contiene degli item valutati con una scala likert da 1 a 6 il cui punteggio totale va poi suddiviso per il numero di item della sotto-scala stessa. Il punteggio va poi confrontato con degli indici di un campione italiano di studenti in base al sesso dell'utente.
 
-Le fasce di rischio sono quindi selezionate in base al sesso dell'utente e alla sotto-scala con punteggio maggiore come possiamo vedere nella Tabella \ref{table:sbi}.
+Le fasce di rischio sono quindi selezionate in base al sesso dell'utente e alla sotto-scala con punteggio maggiore come possiamo vedere nella \autoref{table:sbi}.
 \input{capitoli/tabella_SBI}
 
 \newpage
