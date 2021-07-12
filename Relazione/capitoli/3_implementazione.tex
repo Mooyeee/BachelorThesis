@@ -3,7 +3,7 @@ Dopo la fase di progettazione è stato possibile creare i primi componenti softw
 
 \section{Endpoint utilizzati}
 La prima fase di studio si è concentrata nell'identificare quali chiamate sarebbero state necessarie per il funzionamento dell'applicazione; sono state necessarie varie chiamate per l'autenticazione al servizio di Qualtrics, per recuperare le domande e per inviare le risposte. Inoltre, alcune chiamate sono state utilizzate solo a scopo di test poiché Qualtrics restituisce già tutti i dati necessari per un determinato questionario in un'unica chiamata, seppur in una maniera poco leggibile; effettuare chiamate specifiche per reperire le domande e le informazioni di un determinato blocco permette di avere gli stessi dati in maniera più leggibile. Queste chiamate sono state necessarie \textit{(seppur non implementate nell'applicazione)} poiché purtroppo la documentazione di Qualtrics non fornisce dettagli sulla struttura dei dati delle varie domande e delle risposte; tramite queste chiamate è stato possibile effettuare una sorta di reverse engineering di questi dati.
-Possiamo vedere un elenco riassuntivo delle chiamate interessanti nella Tabella \ref{table:api}.
+Possiamo vedere un elenco riassuntivo delle chiamate interessanti nella \autoref{table:api}.
 
 \input{capitoli/tabella_api}
 
@@ -15,7 +15,7 @@ Possiamo vedere un elenco riassuntivo delle chiamate interessanti nella Tabella 
 Prima di poter fare qualsiasi tipo di chiamata alle API di Qualtrics è necessario ottenere un token di autenticazione: in particolare Qualtrics permette di ottenere una chiave API direttamente dall'ambiente di creazione dei sondaggi \textit{(meno sicura in quanto offre tutti i permessi a chi ne è in possesso)} oppure di richiedere, tramite la chiamata \texttt{POST fra1.qualtrics.com/oauth2/token}\footnote{\url{api.qualtrics.com/guides/docs/Instructions/oauth-authentication.md}} un \textbf{bearer token}, molto più sicuro di una chiave in quanto è possibile definire per esso solo determinati permessi \textit{(nel nostro caso serviranno solo i permessi per leggere i sondaggi e per scrivere le risposte)}.
 Per richiedere tale token è necessario specificare nel campo \texttt{Authentication} della richiesta un \texttt{ClientID} ed un \texttt{ClientSecret}, entrambi generabili dall'ambiente Qualtrics ai quali verranno poi effettivamente assegnati i permessi necessari, mentre nel campo \texttt{Body} sarà necessario specificare il tipo di autenticazione e gli scope richiesti per il token tramite i parametri \texttt{grant\_type=client\_credentials\&scope=\{scope\}}. È interessante notare che è possibile richiedere solo un sottoinsieme di scope disponibili per la coppia <\texttt{ClientID}, \texttt{ClientSecret}>.
 
-Possiamo vedere com'è fatta la risposta a questa chiamata nel JSON \ref{json:token-res}.
+Possiamo vedere com'è fatta la risposta a questa chiamata nel \autoref{json:token-res}.
 
 \begin{json}
 \usemintedstyle[JSON]{trac}
@@ -37,7 +37,7 @@ Una volta ottenuta tale risposta è possibile usare il bearer token presente nel
 
 \newpage
 \subsection{Sondaggi}
-A questo punto è possibile consumare effettivamente i dati forniti dalle API di Qualtrics e per far ciò un buon punto di partenza è recuperare i dati relativi ai sondaggi disponibili nello spazio di lavoro di Qualtrics tramite la chiamata \\ \texttt{GET fra1.qualtrics.com/API/v3/surveys} che restituisce una lista di oggetti, ognuno dei quali rappresenta un sondaggio. Possiamo vedere un esempio semplificato di risposta a tale chiamata nel JSON \ref{json:surveys} \textit{(in cui è riportato solo un sondaggio senza ulteriori meta-dati per semplicità)}, in particolare notiamo che i parametri che ci interessano maggiormente sono il campo \texttt{id}, tramite il quale potremmo ottenere ulteriori informazioni sul sondaggio \textit{(come le sue domande)} e il campo \texttt{name}.
+A questo punto è possibile consumare effettivamente i dati forniti dalle API di Qualtrics e per far ciò un buon punto di partenza è recuperare i dati relativi ai sondaggi disponibili nello spazio di lavoro di Qualtrics tramite la chiamata \\ \texttt{GET fra1.qualtrics.com/API/v3/surveys} che restituisce una lista di oggetti, ognuno dei quali rappresenta un sondaggio. Possiamo vedere un esempio semplificato di risposta a tale chiamata nel \autoref{json:surveys} \textit{(in cui è riportato solo un sondaggio senza ulteriori meta-dati per semplicità)}, in particolare notiamo che i parametri che ci interessano maggiormente sono il campo \texttt{id}, tramite il quale potremmo ottenere ulteriori informazioni sul sondaggio \textit{(come le sue domande)} e il campo \texttt{name}.
 
 \begin{json}
 \usemintedstyle[JSON]{trac}
@@ -63,12 +63,14 @@ A questo punto è possibile consumare effettivamente i dati forniti dalle API di
 \newpage
 \subsection{Sondaggio: domande, blocchi e flow}
 Usando gli id restituiti dalla prima chiamata possiamo a questo punto ottenere ulteriori informazioni su ogni sondaggio tramite la chiamata \\ \texttt{GET fra1.qualtrics.com/API/v3/survey-definitions/\{\{surveyID\}\}}.
-In particolare, come è possibile osservare nel JSON \ref{json:surveyID} questa chiamata ci fornirà informazioni più dettagliate sul sondaggio come il numero di domande, i blocchi presenti nel sondaggio e il \texttt{SurveyFlow}, ovvero l'ordine dei blocchi.
+In particolare, come è possibile osservare nel \autoref{json:surveyID} questa chiamata ci fornirà informazioni più dettagliate sul sondaggio come il numero di domande, i blocchi presenti nel sondaggio e il \texttt{SurveyFlow}, ovvero l'ordine dei blocchi.
 
 \vskip 5em
 \subsubsection{Domande}
-Si può notare che questa chiamata ci fornisce già anche le domande; nell'applicazione, per questione di ottimizzazione di dati e chiamate, viene effettivamente fatta solo questa chiamata per impostare un determinato sondaggio. La particolarità però è che questa chiamata fornisce le domande come un oggetto con all'interno altri oggetti \textit{(le domande stesse)}, il tutto corredato con i dati specifici al questionario stesso: essendo le domande anch'esse degli oggetti relativamente complessi \textit{(non sono mostrate in questo esempio perché ne parleremo dopo distinguendole per tipo)}, può risultare difficile per una persona leggere questi dati, anche se un programma non ha questo problema. \\ Come detto prima, per risolvere questo inconveniente è stata usata la chiamata \\ \texttt{GET fra1.qualtrics.com/API/v3/survey-definitions/\{\{surveyID\}\}/questions} che restituisce solo una lista con gli oggetti rappresentanti le domande, molto più facile da leggere per capire quali parametri servono per implementare la domanda stessa.
-Discorso analogo vale anche per i blocchi che sono già forniti in questa chiamata e che possono essere ottenuti in un formato più leggibile tramite la chiamata \texttt{GET fra1.qualtrics.com/API/v3/survey-definitions/\{\{surveyID\}\}/\{\{blockID\}\}}
+Si può notare che questa chiamata ci fornisce già anche le domande; nell'applicazione, per questione di ottimizzazione di dati e chiamate, viene effettivamente fatta solo questa chiamata per impostare un determinato sondaggio. La particolarità però è che questa chiamata fornisce le domande come un oggetto con all'interno altri oggetti \textit{(le domande stesse)}, il tutto corredato con i dati specifici al questionario stesso: essendo le domande anch'esse degli oggetti relativamente complessi \textit{(non sono mostrate in questo esempio perché ne parleremo dopo distinguendole per tipo)}, può risultare difficile per una persona leggere questi dati, anche se un programma non ha questo problema.
+
+Come detto prima, per risolvere questo inconveniente è stata usata la chiamata \texttt{GET /survey-definitions/\{\{surveyID\}\}/questions} che restituisce solo una lista con gli oggetti rappresentanti le domande, molto più facile da leggere per capire quali parametri servono per implementare la domanda stessa.
+Discorso analogo vale anche per i blocchi che sono già forniti in questa chiamata e che possono essere ottenuti in un formato più leggibile tramite la chiamata \texttt{GET /survey-definitions/\{\{surveyID\}\}/\{\{blockID\}\}}.
 
 Anche in questo caso il JSON di esempio riportato è semplificato; sono stati omessi alcuni campi che non vengono utilizzati in ogni caso dall'applicazione.
 
@@ -116,8 +118,8 @@ Anche in questo caso il JSON di esempio riportato è semplificato; sono stati om
 \end{json}
 
 \subsection{Response}
-La chiamata \\ \texttt{POST fra1.qualtrics.com/API/v3/survey-definitions/\{\{surveyID\}\}/responses} è, escludendo la chiamata necessaria ad ottenere il bearer token, l'unica chiamata col metodo \texttt{POST} che l'applicazione andrà ad utilizzare per inviare al server di Qualtrics le risposte di un determinato questionario.
-Anche in questo caso la documentazione ufficiale di Qualtrics non era molto chiara a proposito di come dovevano effettivamente essere strutturati i dati da inviare, ma è stato tuttavia possibile creare delle risposte di testing e, utilizzando una richiesta \texttt{GET}, recuperare la struttura delle risposte per i diversi tipi di domanda. Possiamo osservare un esempio di risposta nel JSON \ref{json:response}. Non entriamo nei dettagli delle risposte vere e proprie adesso poiché dipendono dal tipo di domanda e ne parleremo dunque dopo. Notiamo però che ci sono molti meta-dati, tra i quali anche quelli legati alla localizzazione \textit{(ottenuta tramite IP)} che però, al fine di mantenere l'anonimato dei nostri utenti, noi non forniremo considerando che sono opzionali. Quello che verrà effettivamente inviato al server sono delle coppie \texttt{"QuestionID": "Response"} inserite nel campo \texttt{values} \textit{(similmente a quanto detto nella \autoref{subsection:risposte} del capitolo precedente}) senza alcun meta-dato.
+La chiamata \texttt{POST /survey-definitions/\{\{surveyID\}\}/responses} è, escludendo la chiamata necessaria ad ottenere il bearer token, l'unica chiamata col metodo \texttt{POST} che l'applicazione andrà ad utilizzare per inviare al server di Qualtrics le risposte di un determinato questionario.
+Anche in questo caso la documentazione ufficiale di Qualtrics non era molto chiara a proposito di come dovevano effettivamente essere strutturati i dati da inviare, ma è stato tuttavia possibile creare delle risposte di testing e, utilizzando una richiesta \texttt{GET}, recuperare la struttura delle risposte per i diversi tipi di domanda. Possiamo osservare un esempio di risposta nel \autoref{json:response}. Non entriamo nei dettagli delle risposte vere e proprie adesso poiché dipendono dal tipo di domanda e ne parleremo dunque dopo. Notiamo però che ci sono molti meta-dati, tra i quali anche quelli legati alla localizzazione \textit{(ottenuta tramite IP)} che però, al fine di mantenere l'anonimato dei nostri utenti, noi non forniremo considerando che sono opzionali. Quello che verrà effettivamente inviato al server sono delle coppie \texttt{"QuestionID": "Response"} inserite nel campo \texttt{values} \textit{(similmente a quanto detto nella \autoref{subsection:risposte} del capitolo precedente}) senza alcun meta-dato.
 
 \begin{json}
 \usemintedstyle[JSON]{trac}
@@ -149,7 +151,7 @@ Anche in questo caso la documentazione ufficiale di Qualtrics non era molto chia
 Abbiamo detto che i blocchi sono degli sotto-insiemi di domande da mostrare separatamente: per fare ciò tuttavia sono necessarie alcune operazioni preliminari atte a ordinare i blocchi e successivamente ad associare le domande che essi contengono ai relativi blocchi.
 
 \subsection{Ordine blocchi}
-Possiamo notare nel JSON \ref{json:survey_flow} come l'oggetto \texttt{SurveyFlow} contenga, in ordine di presentazione, gli ID dei blocchi da mostrare. Per rispettare tale ordine è necessario un incrocio di dati: leggendo i dati del campo \texttt{SurveyFlow} possiamo accedere all'oggetto \texttt{Blocks}, di cui possiamo osservare la struttura nel JSON \ref{json:blocks}, nel giusto ordine, utilizzando il \texttt{BlockID} come chiave di accesso.
+Possiamo notare nel \autoref{json:survey_flow} come l'oggetto \texttt{SurveyFlow} contenga, in ordine di presentazione, gli ID dei blocchi da mostrare. Per rispettare tale ordine è necessario un incrocio di dati: leggendo i dati del campo \texttt{SurveyFlow} possiamo accedere all'oggetto \texttt{Blocks}, di cui possiamo osservare la struttura nel JSON \ref{json:blocks}, nel giusto ordine, utilizzando il \texttt{BlockID} come chiave di accesso.
 
 \begin{json}
 \usemintedstyle[JSON]{trac}
@@ -171,7 +173,7 @@ Possiamo notare nel JSON \ref{json:survey_flow} come l'oggetto \texttt{SurveyFlo
 
 \newpage
 \subsection{Domande appartenenti al blocco}
-Allo stesso modo possiamo notare nel JSON \ref{json:blocks} come i blocchi presentino solo l'ID delle domande che contengono ed è quindi nuovamente necessario, come detto anche nella \autoref{subsection:blocchi} del capitolo precedente, incrociare i dati per assegnare poi a livello di applicazione le domande ai relativi blocchi: leggendo il campo \texttt{BlockElements} si accede agli ID delle domande interessate e, utilizzandoli come chiave per accedere all'oggetto \texttt{Questions}, si possono ottenere solo le domande di un determinato blocco.
+Allo stesso modo possiamo notare nel \autoref{json:blocks} come i blocchi presentino solo l'ID delle domande che contengono ed è quindi nuovamente necessario, come detto anche nella \autoref{subsection:blocchi} del capitolo precedente, incrociare i dati per assegnare poi a livello di applicazione le domande ai relativi blocchi: leggendo il campo \texttt{BlockElements} si accede agli ID delle domande interessate e, utilizzandoli come chiave per accedere all'oggetto \texttt{Questions}, si possono ottenere solo le domande di un determinato blocco.
 
 \begin{json}
 \usemintedstyle[JSON]{trac}
@@ -225,7 +227,7 @@ Possiamo osservare la struttura dati semplificata di questo tipo di domande nel 
 Qualtrics permette anche di definire se la risposta dovrebbe essere corta, media o lunga, modificando la dimensione del campo di testo: questa distinzione viene fatta tramite il campo \texttt{Selector} che vale \texttt{"SL"} \textit{(Single Line)} se la risposta è corta, \texttt{"ML"} \textit{(Multi Line)} se è media e \texttt{ESTB} \textit{(Essay Text Box)} se è lunga. Nell'applicazione viene letto questo campo e viene impostata una dimensione rispettivamente di una, 5 o 10 righe del campo di input. È importante notare tuttavia che questo limite non è fortemente restrittivo: seppur la dimensione del campo di input sia limitata, l'utente può comunque inserire una risposta più lunga, si tratta per lo più di una feature di quality of life. Possiamo osservare com'è renderizzata questa domanda rispettivamente nella webview di Qualtrics e nell'applicazione Flutter nella Figura \ref{fig:text_entry}.
 
 \subsubsection{Response}
-La risposta a questo tipo di domande è del tipo \texttt{\{"QuestionID": "testo risposta"\}}, ovvero viene inserita come risposta la stringa stessa inserita dall'utente nel campo di input.
+La risposta a questo tipo di domande è del tipo\\ \texttt{\{"QuestionID": "testo risposta"\}}, ovvero viene inserita come risposta la stringa stessa inserita dall'utente nel campo di input.
 
 \newpage
 \begin{json}
@@ -296,14 +298,14 @@ La risposta a queste domande dipende se la risposta è una sola o più di una: s
 \label{json:mc}
 \end{json}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \centering
 \includegraphics[width=\textwidth]{img/mc_flutter}
 \caption{Multiple Choices}
 \label{fig:mc}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \centering
 \includegraphics[width=\textwidth]{img/mc_media}
 \caption{Domanda con media e text entry nelle opzioni}
@@ -348,7 +350,7 @@ La risposta a questo tipo di domanda è del tipo \texttt{\{"QuestionID": numero\
 \label{json:nps}
 \end{json}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \centering
 \includegraphics[width=\textwidth]{img/nps}
 \caption{Domanda Net Promoter Score}
@@ -459,7 +461,7 @@ Anche in questo caso, essendo una domanda che accetta solo risposte singole, le 
 Una matrice simile alle Likert è la matrice Text Entry che, invece che avere delle risposte chiuse, permette di scrivere una risposta aperta per ogni sotto-domanda. Possiamo notare in Figura \ref{fig:matrix_te} come anche lo stile adottato richiama molto le matrici Likert, proprio per creare un design coerente in tutta l'applicazione.
 
 \paragraph{Response:}
-Le risposte di questo tipo di domande sono del tipo \texttt{\{"QuestionID\_ChoiceID": "testo"\}}. Nel caso un'opzione prevedesse una text entry aggiuntiva, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
+Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": "testo"\}}.\\Nel caso un'opzione prevedesse una text entry aggiuntiva, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \begin{figure}[h!]
 \centering
@@ -473,7 +475,7 @@ Le risposte di questo tipo di domande sono del tipo \texttt{\{"QuestionID\_Choic
 Anche le matrici di tipo Rank Order somigliano molto alle matrici Likert, ma hanno un campo di input in cui l'utente può inserire un numero: queste domande richiedono all'utente di definire un ordine tra le varie opzioni assegnando dei numeri interi ad ogni opzione. Possiamo notare nella Figura \ref{fig:matrix_ro} come lo stile adottato sia molto simile allo stile delle matrici Text Entry ma con un campo di input minore, essendo necessario meno spazio per inserire dei numeri.
 
 \paragraph{Response:}
-Le risposte di questo tipo di domande sono del tipo \texttt{\{"QuestionID\_ChoiceID": numero\}}. Nel caso un'opzione prevedesse una text entry, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
+Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": numero\}}.\\Nel caso un'opzione prevedesse una text entry, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \begin{figure}[h!]
 \centering
@@ -487,7 +489,7 @@ Le risposte di questo tipo di domande sono del tipo \texttt{\{"QuestionID\_Choic
 Anche questo ultimo tipo di matrici è simile alle Text Entry: permette di inserire dei numeri come le Rank Order ma che non hanno lo scopo di ordinare le risposte. Queste matrici riportano infine la somma di tutti i numeri inseriti nelle varie opzioni. È possibile osservare nella Figura \ref{fig:matrix_cs} come lo stile adottato sia molto simile alle matrici Rank Order, visto che accettano lo stesso tipo di input.
 
 \paragraph{Response:}
-Le risposte di questo tipo di domande sono del tipo \texttt{\{"QuestionID\_ChoiceID": numero\}}. Nel caso un'opzione prevedesse una text entry, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
+Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": numero\}}.\\Nel caso un'opzione prevedesse una text entry, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \begin{figure}[h!]
 \centering
@@ -504,7 +506,7 @@ Il tipo di domanda Side By Side è un'evoluzione delle matrici precedenti: quest
 Come per le matrici, anche le Side By Side supportano immagini su \texttt{Choices} e \texttt{Answers} e text entry aggiuntive sulle \texttt{Choices}.
 
 \subsubsection{Response}
-Avendo la domanda più domande interne indipendenti, le risposte sono separate e sono identificate da \texttt{QuestionID\#SubQuestionID\_ChoiceID} \textit{(il SubQuestionID è quello riportarto nel campo QuestionID delle domande nel campo AdditionalQuestions)}. \\ Le risposte sono dunque del tipo \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": AnswerID\}} nel caso di risposta singola, \\ \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": [AnswerID\_1, AnswerID\_2]\}} nel caso di risposta multipla e \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": "testo"\}} nel caso di text entry. \\
+Avendo la domanda più domande interne indipendenti, le risposte sono separate e sono identificate da \texttt{QuestionID\#SubQuestionID\_ChoiceID} \textit{(il SubQuestionID è quello riportarto nel campo QuestionID delle domande nel campo AdditionalQuestions)}. Le risposte sono dunque del tipo\\ \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": AnswerID\}} per una risposta singola, \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": [AnswerID\_1, AnswerID\_2]\}}\\ per risposte multiple e \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID": "testo"\}} nel caso di text entry. \\
 Nel caso fossero presenti text entry addizionali sulle \texttt{Choices}, la risposta a tali text entry è del tipo \texttt{\{"QuestionID\#SubQuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \newpage
@@ -594,10 +596,10 @@ Le risposte a questo tipo di domande sono del tipo \texttt{\{"QuestionID\_Choice
 }
 \end{minted}
 \caption{Oggetto domanda Slider}
-\label{json:sbs}
+\label{json:slider}
 \end{json}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \centering
 \includegraphics[width=\textwidth]{img/slider}
 \caption{Slider}
@@ -655,7 +657,7 @@ Un'evoluzione delle domande di tipo Rank Order sono le Pick, Group and Rank che 
 Anche in questo caso è possibile assegnare alle \texttt{Choices} un'immagine e una text entry aggiuntiva.
 
 \subsubsection{Response}
-Le risposte a questo tipo di domande si suddividono in due parti è sono del tipo \texttt{\{"QuestionID\_index\_GROUP": [ChoiceID\_1, ChoiceID\_2]\}} per indicare quali item fanno parte di quale lista \textit{(o gruppo)} e del tipo \texttt{\{"QuestionID\_Gindex\_ChoiceID\_RANK": numero\}} per indicare l'ordinamento, dove \texttt{Gindex} indica il gruppo di cui fa parte l'item \textit{(ad esempio G0 per il primo gruppo e G1 per il secondo)} e \texttt{numero} indica il rank di quell'item nel suddetto gruppo.
+Le risposte a questo tipo di domande si suddividono in due parti è sono del tipo \texttt{\{"QuestionID\_index\_GROUP": [ChoiceID\_1, ChoiceID\_2]\}} per indicare quali item fanno parte di quale lista \textit{(o gruppo)} e del tipo\\ \texttt{\{"QuestionID\_Gindex\_ChoiceID\_RANK": numero\}} per indicare l'ordinamento, dove \texttt{Gindex} indica il gruppo di cui fa parte l'item \textit{(ad esempio G0 per il primo gruppo e G1 per il secondo)} e \texttt{numero} indica il rank di quell'item nel suddetto gruppo.
 Nel caso ci fosse una text entry aggiuntiva, la risposta sarà del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \newpage

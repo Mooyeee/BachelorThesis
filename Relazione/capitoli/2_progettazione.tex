@@ -2,12 +2,12 @@
 \label{chap:progettazione}
 Prima di poter mettere mano all'applicazione è stato necessario un iniziale periodo di studio dell'ambiente, in particolare del linguaggio \textbf{Dart} e del framework \textbf{Flutter}; è stato piacevole scoprire come Flutter supporti nativamente sia il \textbf{Material Design}, stile adottato per lo sviluppo dell'interfaccia grafica \textit{(almeno per quanto riguarda Android)}, sia lo stile \textbf{Cupertino}, ovvero lo stile nativo di iOS, impostando di default alcune regole di tali stili quando vengono creati determinati widget.
 
-Successivamente a questo periodo di studio è iniziata la vera e propria progettazione dell'applicazione, fase durante la quale sono stati stabiliti il modello dei dati e l'architettura adottata per lo sviluppo. Una nota importante riguardo i dati è che questi sono stati creati da un altro gruppo di persone specializzate in psicologia, che quindi ha ideato, durante lo sviluppo del progetto, le domande necessarie: era dunque necessario che il backend dell'applicazione, qulunque esso fosse stato, permettesse l'accesso sia all'applicazione stessa in lettura che al gruppo di psicologia in scrittura.
+Successivamente a questo periodo di studio è iniziata la vera e propria progettazione dell'applicazione, fase durante la quale sono stati stabiliti il modello dei dati e l'architettura adottata per lo sviluppo. Una nota importante riguardo i dati è che questi sono stati creati da un altro gruppo di persone specializzate in psicologia, che quindi ha ideato, durante lo sviluppo del progetto, le domande necessarie: era dunque necessario che il backend dell'applicazione, qualunque esso fosse stato, permettesse l'accesso sia all'applicazione stessa in lettura che al gruppo di psicologia in scrittura.
 
 \newpage
 
 \section{Glossario}
-Prima di procedere e parlare dell'effettiva organizzazione dei dati è necessario e utile definire un glossario di termini ricorrenti utilizzati durante lo sviluppo. Possiamo osservare tale glossario nella Tabella \ref{table:glossario}.
+Prima di procedere e parlare dell'effettiva organizzazione dei dati è necessario e utile definire un glossario di termini ricorrenti utilizzati durante lo sviluppo. Possiamo osservare tale glossario nella \autoref{table:glossario}.
 
 \input{capitoli/tabella_glossario}
 
@@ -16,7 +16,7 @@ Prima di procedere e parlare dell'effettiva organizzazione dei dati è necessari
 I dati ricevuti prima dell'inizio stesso del progetto riguardavano la struttura dell'applicazione in termini di sezioni e di come queste devono essere organizzate. In particolare, le patologie da identificare e su cui lavorare sono sette: Depressione, Ansia, Pensieri Autodistruttivi, Problemi di Sonno, Burnout, Dolore Cronico e Difficoltà Relazionali. Ognuna di queste problematiche prevede uno specifico \textbf{screening} con una specifica scala che determinerà se l'utente ne è affetto o meno e uno specifico \textbf{percorso terapeutico} della durata di sette settimane. Un'eccezione è fatta per il modulo relativo alle difficoltà relazionali che è \textbf{trasversale} rispetto agli altri: alla sesta settimana tutti gli utenti affronteranno una psico-educazione e degli esercizi relativi alle difficoltà relazionali. Le altre settimane sono caratterizzate da un'iniziale \textbf{psico-educazione} sulle patologie di cui soffre l'utente seguite da una serie di \textbf{esercizi} e da un \textbf{weekly screening} utile per monitorare l'andamento dell'utente. Durante tutto ciò, ogni giorno verrà somministrato all'utente un piccolo questionario giornaliero, notificato ad un orario scelto dall'utente.
 Infine, dopo il percorso e dopo 12 e 24 settimane verranno somministrati all'utente gli screening iniziali, in modo da poter avere un'idea del progresso fatto.
 
-È possibile osservare la timeline delle diverse sezioni nella Figura \ref{fig:timeline_app}.
+È possibile osservare la timeline delle diverse sezioni nella \autoref{fig:timeline_app}.
 
 \begin{figure}
 \centering
@@ -39,7 +39,7 @@ In particolare, le diverse sezioni sono:
 \newpage
 
 \section{Prima di Qualtrics}
-Inizialmente non era stato scelto uno specifico backend, per cui lo sviluppo del modello dati è stato eseguito pensando ad un generale database \textit{(come potrebbe essere Firebase)} e ad una generica applicazione che facesse uso di domande e risposte. Come possiamo osservare nella Figura \ref{fig:modello_iniziale}, è stato pensato ad un modello estremamente semplice ma estendibile e che, per il momento, distingueva solo domande a risposta aperta, domande a risposta chiusa e domande \textit{"speciali"} di screening (che inizialmente pensavamo fossero solo a risposta chiusa).
+Inizialmente non era stato scelto uno specifico backend, per cui lo sviluppo del modello dati è stato eseguito pensando ad un generale database \textit{(come potrebbe essere Firebase)} e ad una generica applicazione che facesse uso di domande e risposte. Come possiamo osservare nella \autoref{fig:modello_iniziale}, è stato pensato ad un modello estremamente semplice ma estendibile e che, per il momento, distingueva solo domande a risposta aperta, domande a risposta chiusa e domande \textit{"speciali"} di screening \textit{(che inizialmente pensavamo fossero solo a risposta chiusa)}.
 Ad ogni domanda erano poi associate delle opzioni selezionabili \textit{(o definibili nel caso di domande a risposta aperta)} e la risposta ad una certa domanda non era altro che l'opzione \textit{(o le opzioni)} selezionata.
 
 \begin{figure}[h]
@@ -56,7 +56,7 @@ Non molto dopo i primi sviluppi è stato deciso di utilizzare \textbf{Qualtrics}
 Generalmente questa soluzione è orientata alle aziende per ottenere feedback sia dai propri clienti che dai propri impiegati: l'idea era adattare questo software già pronto e che presenta già diversi tipi di domande utili al nostro scopo per poter ottenere gli input necessari dai nostri utenti e presentarli a chi deve poi analizzarli. Non solo, essendo una piattaforma a sé stante, essa permette anche al gruppo di psicologia di creare i sondaggi necessari indipendentemente dallo sviluppo dell'applicazione, che si limita, tramite le API di Qualtrics, a ottenere e presentare questi sondaggi.
 
 \subsection{Modello dati: domande}
-In particolare, come possiamo vedere nel modello semplificato della Figura \ref{fig:modello_semplice_qualtrics}, il modello dati adottato da Qualtrics prevede un oggetto esterno, la \textbf{Survey} \textit{(sondaggio)}, che contiene, oltre a vari parametri di configurazione, una lista di \textbf{Questions} \textit{(domande, che sono degli oggetti anch'esse)} che possono essere di vario tipo; le domande a loro volta contengono i loro parametri di configurazione ed una lista di possibili risposte \textit{(Choices)} se a risposta chiusa.
+In particolare, come possiamo vedere nel modello semplificato della \autoref{fig:modello_semplice_qualtrics}, il modello dati adottato da Qualtrics prevede un oggetto esterno, la \textbf{Survey} \textit{(sondaggio)}, che contiene, oltre a vari parametri di configurazione, una lista di \textbf{Questions} \textit{(domande, che sono degli oggetti anch'esse)} che possono essere di vario tipo; le domande a loro volta contengono i loro parametri di configurazione ed una lista di possibili risposte \textit{(Choices)} se a risposta chiusa.
 Tra i valori interessanti contenuti nei parametri delle domande ci sono il \texttt{QuestionText}, che rappresenta la domanda vera e propria in linguaggio naturale, il \texttt{Selector} che permette di avere domande simili ma differenziate per qualche dettaglio \textit{(ad esempio possiamo avere una domanda a risposta chiusa in cui si possono selezionare più risposte piuttosto che solo una)} e il \texttt{ChoiceOrder}, che stabilisce in che ordine devono apparire le possibili risposte, contenute nell'oggetto \texttt{Choices}.
 Ogni entità è inoltre opportunamente identificata.
 
@@ -65,13 +65,13 @@ Ogni entità è inoltre opportunamente identificata.
 \subsection{Modello dati: blocchi}
 \label{subsection:blocchi}
 Un aspetto particolare riguardo l'organizzazione delle domande nell'ambiente Qualtrics è quello legato ai \textbf{Blocks}, che sono degli insiemi di domande presentati separatamente. Questo permette di non sovraccaricare una schermata di domande ma di suddividerle in parti visualizzate indipendentemente.
-Come si può vedere sempre nella Figura \ref{fig:modello_semplice_qualtrics}, i blocchi sono degli oggetti contenuti nell'oggetto \texttt{Survey} che dispongono di un \texttt{BlockID} e di una \texttt{Description}, una descrizione testuale utilizzata per dare un'idea del contesto delle domande presenti nel blocco. Inoltre, i blocchi contengono una lista di oggetti \texttt{BlockElements} che, seppur contente oggetti, non contiene le domande vere e proprie, ma solo gli \texttt{QuestionID} delle domande facenti parte del rispettivo blocco; è necessario quindi un incrocio dei dati nell'applicazione per far sì che le domande rispettino l'ordine dei blocchi.
+Come si può vedere sempre nella \autoref{fig:modello_semplice_qualtrics}, i blocchi sono degli oggetti contenuti nell'oggetto \texttt{Survey} che dispongono di un \texttt{BlockID} e di una \texttt{Description}, una descrizione testuale utilizzata per dare un'idea del contesto delle domande presenti nel blocco. Inoltre, i blocchi contengono una lista di oggetti \texttt{BlockElements} che, seppur contente oggetti, non contiene le domande vere e proprie, ma solo gli \texttt{QuestionID} delle domande facenti parte del rispettivo blocco; è necessario quindi un incrocio dei dati nell'applicazione per far sì che le domande rispettino l'ordine dei blocchi.
 
 È presente inoltre, sempre nell'oggetto \texttt{Survey}, un ulteriore oggetto \texttt{SurveyFlow} che contiene l'ordine di visualizzazione dei blocchi in una lista contenente i \texttt{BlockID} corrispondenti \textit{(in quanto potrebbero non essere nel giusto ordine all'interno dell'oggetto \texttt{Blocks})}.
 
 \subsection{Modello dati: risposte}
 \label{subsection:risposte}
-Sempre nella Figura \ref{fig:modello_semplice_qualtrics} possiamo osservare anche come sono fatte le risposte nel backend; in particolare, essendo ogni entità opportunamente identificata direttamente da Qualtrics, le risposte non sono altro che degli oggetti contenenti delle coppie \texttt{\{ID\_Domanda: ID\_Risposta\}} oppure \texttt{\{ID\_Domanda: [ID\_Risposta\_1, ..., ID\_Risposta\_n]\}}, nel caso di domande a risposta chiusa, mentre nel caso di domande a risposta aperta sono del tipo \texttt{\{ID\_Domanda: "Risposta"\}}. Oltre a questo, possono contenere dei meta-dati che diano informazioni ad esempio sul tempo impiegato per rispondere o eventualmente sul browser utilizzato dagli utenti: di questi dati la maggior parte non verranno prodotti dall'applicazione, essendo opzionali \textit{(ricordiamo che Qualtrics è stato pensato per essere implementato in siti web)}.
+Sempre nella \autoref{fig:modello_semplice_qualtrics} possiamo osservare anche come sono fatte le risposte nel backend; in particolare, essendo ogni entità opportunamente identificata direttamente da Qualtrics, le risposte non sono altro che degli oggetti contenenti delle coppie \texttt{\{ID\_Domanda: ID\_Risposta\}} oppure \texttt{\{ID\_Domanda: [ID\_Risposta\_1, ..., ID\_Risposta\_n]\}}, nel caso di domande a risposta chiusa, mentre nel caso di domande a risposta aperta sono del tipo \texttt{\{ID\_Domanda: "Risposta"\}}. Oltre a questo, possono contenere dei meta-dati che diano informazioni ad esempio sul tempo impiegato per rispondere o eventualmente sul browser utilizzato dagli utenti: di questi dati la maggior parte non verranno prodotti dall'applicazione, essendo opzionali \textit{(ricordiamo che Qualtrics è stato pensato per essere implementato in siti web)}.
 
 \begin{figure}
 \centering
@@ -91,8 +91,9 @@ Per lo sviluppo vero e proprio dell'applicazione è stato adottato il pattern ar
 \end{itemize}
 
 \subsection{MVC in Flutter}
+\label{subsection:mvc}
 Le componenti \textbf{View} dell'applicazione sono costituite dalla parte atomica di un'applicazione Flutter, i \textbf{widget}\footnote{\url{https://flutter.dev/docs/development/ui/widgets-intro}}: ogni elemento visibile a schermo è un qualche tipo di widget o una combinazione di widget. Flutter permette di avere dei widget all'interno di altri widget e di definire dei \textbf{custom widget}, costituiti da combinazioni di widget più basilari, per definire delle UI complesse. Man mano che si definiscono diversi widget all'interno dell'applicazione, Flutter crea un \textbf{widget tree}, ovvero un albero che rappresenta la gerarchia tra widget mostrando i vari parent \textit{(widget complessi di livello superiore)} e i children \textit{(widget base definiti da Flutter)} e che verrà poi utilizzato per ottimizzare il rendering dell'UI.
-Possiamo osservare un esempio di widget tree nella Figura \ref{fig:widget_tree}.
+Possiamo osservare un esempio di widget tree nella \autoref{fig:widget_tree}.
 
 \begin{figure}[h]
 \centering
@@ -101,7 +102,7 @@ Possiamo osservare un esempio di widget tree nella Figura \ref{fig:widget_tree}.
 \label{fig:widget_tree}
 \end{figure}
 
-Come è possibile osservare nella Figura \ref{fig:MVC_Flutter}, per realizzare le componenti \textbf{Model} e \textbf{Controller} in Flutter sono stati utilizzati i \textbf{Provider}: un Provider è una classe che viene estesa con la classe \texttt{ChangeNotifier}, che permette alla classe iniziale di ascoltare i cambiamenti nei dati e utilizzarli per aggiornare la \textbf{View} tramite il metodo \texttt{notifyListeners()} \textit{(e che quindi implementa un design pattern di tipo Observer)}. In particolare, i \textbf{Model} sono definiti dalle classi estese con \texttt{ChangeNotifier} che contengono effettivamente i dati e i metodi utilizzabili per modificarli, mentre i \textbf{Controller} sono definiti dall'accesso ai provider nelle classi \textbf{View} tramite la definizione \texttt{Provider.of<Classe>(context)}: questo perché quando viene definito un Provider ad un certo livello del widget tree, tutti gli elementi al di sotto di esso possono accedervi utilizzando il contesto fornito dal framework stesso, evitando così di dover importare ad ogni livello la classe \textbf{Model} per poter accedere ai suoi metodi.
+Come è possibile osservare nella \autoref{fig:MVC_Flutter}, per realizzare le componenti \textbf{Model} e \textbf{Controller} in Flutter sono stati utilizzati i \textbf{Provider}: un Provider è una classe che viene estesa con la classe \texttt{ChangeNotifier}, che permette alla classe iniziale di ascoltare i cambiamenti nei dati e utilizzarli per aggiornare la \textbf{View} tramite il metodo \texttt{notifyListeners()} \textit{(e che quindi implementa un design pattern di tipo Observer)}. In particolare, i \textbf{Model} sono definiti dalle classi estese con \texttt{ChangeNotifier} che contengono effettivamente i dati e i metodi utilizzabili per modificarli, mentre i \textbf{Controller} sono definiti dall'accesso ai provider nelle classi \textbf{View} tramite la definizione \texttt{Provider.of<Classe>(context)}: questo perché quando viene definito un Provider ad un certo livello del widget tree, tutti gli elementi al di sotto di esso possono accedervi utilizzando il contesto fornito dal framework stesso, evitando così di dover importare ad ogni livello la classe \textbf{Model} per poter accedere ai suoi metodi.
 
 \begin{figure}[h]
 \centering
@@ -120,7 +121,7 @@ Il \textit{Material Design} si è evoluto molto nel tempo nel tentativo di Googl
 \newpage
 
 Difatti, il \textit{Material Design} è molto ispirato al mondo fisico, sopratutto alle sue superfici, al modo in cui esse interagiscono con la luce \textit{(riflettanza, ombreggiatura)} e a come interagiscono fra loro \textit{(due oggetti fisici possono essere impilati, affiancati, ma non potranno mai compenetrarsi)} e cerca quindi di replicare questi comportamenti anche nel mondo digitale: il \textbf{materiale} è come un foglio di carta interattivo.
-Dunque, come è possibile notare nella Figura \ref{fig:material_example}, i componenti \textit{Material} interagiscono fra loro come se fossero in un ambiente 3D fatto di sovrapposizioni ed affiancamenti che generano le dovute ombreggiature e riflessi.
+Dunque, come è possibile notare nella \autoref{fig:material_example}, i componenti \textit{Material} interagiscono fra loro come se fossero in un ambiente 3D fatto di sovrapposizioni ed affiancamenti che generano le dovute ombreggiature e riflessi.
 
 \begin{figure}[h]
 \centering

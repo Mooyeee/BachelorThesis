@@ -1,6 +1,6 @@
-\begin{table}[h!]
+\begin{table}[ht!]
 \def\arraystretch{1.5}
-\begin{tabular}{| m{3em} | m{12em} | m{18em} |}
+\begin{tabular}{| m{3em} | m{12em} | m{17em} |}
  \hline
  \textbf{TIPO} & \textbf{ENDPOINT} & \textbf{DESCRIZIONE} \\
  \hline \hline
@@ -11,16 +11,18 @@
  GET & /surveys & Restituisce tutti i questionari presenti nell'ambiente Qualtrics. \\
  \hline
  
- GET & /survey-definitions /\textbf{\{\{surveyID\}\}} & Restituisce i dati completi relativi al questionario \textbf{\{\{surveyID\}\}} come il numero di domande, i blocchi, meta-dati per la visualizzazione web, le domande e i blocchi \textit{(seppur in maniera poco leggibile)}. \\
+ GET & /survey-definitions\newline / \textbf{\{\{surveyID\}\}} & Restituisce i dati completi relativi al questionario \textbf{\{\{surveyID\}\}} come il numero di domande, i blocchi, meta-dati per la visualizzazione web, le domande e i blocchi \textit{(seppur in maniera poco leggibile)}. \\
  \hline
  
- GET & /survey-definitions /\textbf{\{\{surveyID\}\}}/questions & Restituisce tutte le domande del questionario \textbf{\{\{surveyID\}\}} \textit{(senza distinzione fra blocchi)} sotto forma di lista di oggetti e senza ulteriori meta-dati legati alla survey, rendendo i dati molto più leggibili. Questa è una delle chiamate eseguite solo in fase di test ed è stata utilizzata unicamente per osservare e studiare il formato dei dati delle varie domande tramite Postman. \\
+ GET & /survey-definitions\newline /\textbf{\{\{surveyID\}\}}/questions & Restituisce tutte le domande del questionario \textbf{\{\{surveyID\}\}} \textit{(senza distinzione fra blocchi)} sotto forma di lista di oggetti e senza ulteriori meta-dati legati alla survey, rendendo i dati molto più leggibili. Questa è una delle chiamate eseguite solo in fase di test ed è stata utilizzata unicamente per osservare e studiare il formato dei dati delle varie domande tramite Postman. \\
  \hline
  
- GET & /survey-definitions /\textbf{\{\{surveyID\}\}} /\textbf{\{\{blockID\}\}} & Restituisce i dati relativi al blocco \textbf{\{\{surveyID\}\}}, tra i quali anche gli ID delle domande facenti parte di quel blocco. Anche questa chiamata è stata utilizzata unicamente a scopo di test. \\
+ GET &
+ /survey-definitions\newline /\textbf{\{\{surveyID\}\}}\newline /\textbf{\{\{blockID\}\}} &
+ Restituisce i dati relativi al blocco\newline \textbf{\{\{blockID\}\}}, tra i quali anche gli ID delle domande facenti parte di quel blocco. Anche questa chiamata è stata utilizzata unicamente a scopo di test. \\
  \hline
 
- POST & /survey-definitions /\textbf{\{\{surveyID\}\}}/responses & Invia le risposte al questionario \textbf{\{\{surveyID\}\}} al server. \\
+ POST & /survey-definitions\newline /\textbf{\{\{surveyID\}\}}/responses & Invia le risposte al questionario \textbf{\{\{surveyID\}\}} al server. \\
  \hline
  
 \end{tabular}
