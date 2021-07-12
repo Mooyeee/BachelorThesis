@@ -1,0 +1,53 @@
+\chapter{Note per gli sviluppatori}
+In questa appendice saranno forniti alcuni dettagli implementativi che possono essere utili per gli sviluppatori a continuare o migliorare il lavoro fatto fino ad ora. In particolare verranno elencati l'ambiente di sviluppo e i vari pacchetti utilizzati durante lo sviluppo.
+
+\section{Ambiente di sviluppo}
+Come ambiente di sviluppo è stato utilizzato \textbf{\textit{Visual Studio Code}}\footnote{\url{code.visualstudio.com}} accompagnato dalle seguenti estensioni:
+\begin{itemize}
+\item \textbf{Flutter}: aggiunge il supporto al editing, refactoring, running e hot realoading di applicazioni flutter in Visual Studio Code.
+\item \textbf{Dart}: aggiunge il supporto al linguaggio Dart, utilizzato da Flutter, e al refactoring automatico secondo le linee guida di Google.
+\item \textbf{Bracket Pair Colorizer 2}: estensione che colora diversamente le varie coppie di parentesi in un sorgente; molto utile per sviluppare in Flutter in quanto creando diversi widget le parentesi diventano tante molto facilmente.
+\end{itemize}
+
+\section{Pacchetti utilizzati}
+Nella \autoref{table:pacchetti} sono elencati i vari pacchetti utilizzati dall'applicazione e la funzione che ognuno di essi svolge. Sono riportate anche le versioni dei vari pacchetti, nel caso qualcuno di essi subisca una \textit{breaking change}. Per l'installazione basta aggiungere il pacchetto al file \texttt{pubspec.yaml} e lanciare il comando \texttt{flutter pub get}. Tutti i pacchetti sono disponibili presso \url{pub.dev/packages}.
+
+\def\arraystretch{1.5}
+\begin{longtable}{| m{100pt} | m{150pt} | m{128pt} |}
+\caption{Pacchetti utilizzati}
+\label{table:pacchetti}\\
+ \hline
+ \textbf{NOME} & \textbf{FUNZIONE} & \textbf{URL} \\
+ \hline
+ 
+ Provider 5.0.0 & Permette di utilizzare i provider citati nella \autoref{subsection:mvc} del \autoref{chap:progettazione}. & \href{https://pub.dev/packages/provider}{/provider} \\
+ \hline
+ Shared Preferences 2.0.6 & Utilizzato per poter scrivere dati sulla memoria di massa del dispositivo. & \href{https://pub.dev/packages/shared_preferences}{/shared\_preferences} \\
+ \hline
+ Flutter Native\newline Splash 1.2.0 & Permette di creare uno splash screen nativo che viene mostrato mentre viene caricato il framework di Flutter. & \href{https://pub.dev/packages/flutter_native_splash}{/flutter\_native\_splash} \\
+ \hline
+ Drag And Drop\newline Lists 0.3.2 & Permette di creare delle liste con supporto al trascinamento e riordinamento degli elementi anche tra liste diverse. & \href{https://pub.dev/packages/drag_and_drop_lists}{/drag\_and\_drop\_lists} \\
+ \hline
+ Better Player 0.0.72 & Player video adattabile che implementa diversi controlli sullo stream video. & \href{https://pub.dev/packages/better_player}{/better\_player} \\
+ \hline
+ Youtube Player\newline iframe 2.1.0 & Permette di riprodurre video da YouTube tramite iframe senza bisogno di chiave API. & \href{https://pub.dev/packages/youtube_player_iframe}{/youtube\_player\_iframe} \\
+ \hline
+ AudioPlayers 0.19.1 & Plugin di basso livello che permette di riprodurre file audio, i controlli sono stati creati da zero assegnando le funzioni esposte. & \href{https://pub.dev/packages/audioplayers}{/audioplayers} \\
+ \hline
+ http 0.13.3 & Permette di creare richieste http. & \href{https://pub.dev/packages/http}{/http} \\
+ \hline
+ html 0.15.0 & Parser html, utile per estrarre il parametro \texttt{src} dai media del Question Text. & \href{https://pub.dev/packages/html}{/html} \\
+ \hline
+Simple Html CSS\newline 3.0.1 & Traduce le proprietà CSS\newline relative al testo in widget \texttt{RichText}, permettendo di replicare in app i testi editati in un rich text editor. & \href{https://pub.dev/packages/simple_html_css}{/simple\_html\_css} \\
+ \hline
+ Table Calendar\newline 3.0.1 & Calendario provvisto di eventi. Permette di renderizzare i vari widget personalmente con vari builder esposti. & \href{https://pub.dev/packages/table_calendar}{/table\_calendar} \\
+ \hline
+ intl 0.17.0 & Internazionalizzazione e\newline localizzazione, usato principalmente per il calendario. & \href{https://pub.dev/packages/intl}{/intl} \\
+ \hline
+ Intro Views Flutter 3.2.0 & Pacchetto usato per creazione rapida di schermate di introduzione. & \href{https://pub.dev/packages/intro_views_flutter}{/intro\_views\_flutter} \\
+ \hline
+ Google Fonts 2.1.0 & Permette di utilizzare i font gratuiti di Google Fonts in app. & \href{https://pub.dev/packages/google_fonts}{/google\_fonts} \\
+ \hline
+ 
+\end{longtable}
+
