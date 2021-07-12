@@ -29,20 +29,6 @@
 \renewcommand{\appendixtocname}{Appendice}
 \renewcommand{\appendixpagename}{Appendice}
 
-\makeatletter
-\def\nobreakhline{%
-\multispan\LT@cols\unskip\leaders\hrule\@height\arrayrulewidth\hfill\cr
-    \noalign{\penalty10000}}
-\makeatother
-
-\makeatletter
-\def\nobreakhlinedouble{%
-    \multispan\LT@cols\unskip\leaders\hrule\@height\arrayrulewidth\hfill\cr
-    \noalign{\penalty10000\vskip\doublerulesep}
-    \multispan\LT@cols\unskip\leaders\hrule\@height\arrayrulewidth\hfill\cr
-    \noalign{\penalty10000}}
-\makeatother
-
 % Opzioni stile capitoli
 \usepackage[Rejne]{fncychap}  
 \makeatletter
