@@ -3,7 +3,6 @@
 \usepackage{array}
 \usepackage[english, italian]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage[autostyle=true]{csquotes}
 \usepackage{graphicx}
 \usepackage[backend=biber, backref=true, sorting=none, maxbibnames=5]{biblatex}
 \addbibresource{ref.bib}
@@ -14,22 +13,50 @@
 \usepackage{lmodern}
 \usepackage[newfloat]{minted}
 \usepackage{xcolor, colortbl}
+\usepackage[autostyle=true]{csquotes}
+\usepackage[final]{microtype}
+\usepackage[toc, page]{appendix}
+\usepackage{longtable}
 \usepackage{hyperref}
 \usepackage{caption}
 \usepackage[titles]{tocloft}
-
-\newenvironment{code}{\captionsetup{type=listing}}{}
-\SetupFloatingEnvironment{listing}{name=Codice}
 
 \newenvironment{json}{\captionsetup{type=listing}}{}
 \SetupFloatingEnvironment{listing}{name=JSON}
 
 \def\labelitemi{--}
 
+\renewcommand{\appendixtocname}{Appendice}
+\renewcommand{\appendixpagename}{Appendice}
+
+\makeatletter
+\def\nobreakhline{%
+\multispan\LT@cols\unskip\leaders\hrule\@height\arrayrulewidth\hfill\cr
+    \noalign{\penalty10000}}
+\makeatother
+
+\makeatletter
+\def\nobreakhlinedouble{%
+    \multispan\LT@cols\unskip\leaders\hrule\@height\arrayrulewidth\hfill\cr
+    \noalign{\penalty10000\vskip\doublerulesep}
+    \multispan\LT@cols\unskip\leaders\hrule\@height\arrayrulewidth\hfill\cr
+    \noalign{\penalty10000}}
+\makeatother
 
 % Opzioni stile capitoli
-\usepackage[Rejne]{fncychap}
+\usepackage[Rejne]{fncychap}  
 \makeatletter
+ \renewcommand{\DOTIS}[1]{%
+    \setlength{\py}{\fboxrule}
+    \setlength{\fboxrule}{\RW}
+    \setlength{\mylen}{\textwidth}
+    \addtolength{\mylen}{-2\RW}
+    \addtolength{\mylen}{-2\fboxsep} %%%%
+    \fbox{\parbox{\mylen}{\vskip 2\baselineskip\CTV\FmTi{#1}\par\nobreak\vskip \baselineskip}} 
+    \setlength{\fboxrule}{\py}
+    \vskip 60\p@
+    }
+
 \renewcommand*{\@makechapterhead}[1]{%
   \vspace*{5\p@}%
   {\parindent \z@ \raggedright \normalfont
@@ -57,17 +84,24 @@
   \ChNameVar{\centering\large\rm}
 \makeatother
 
-
 \begin{document}
 \include{capitoli/frontespizio}
 
 \tableofcontents
+\listoffigures
 
+\include{capitoli/ringraziamenti}
 \include{capitoli/introduzione}
 \include{capitoli/1_mindblooming}
 \include{capitoli/2_progettazione}
 \include{capitoli/3_implementazione}
 \include{capitoli/4_manuale_utente}
+\include{capitoli/5_conclusioni}
+
+\begin{appendices}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
+\include{capitoli/A_appendice}
+\end{appendices}
 
 \cleardoublepage
 \phantomsection
