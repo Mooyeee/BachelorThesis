@@ -1,4 +1,4 @@
-\documentclass[a4paper, 12pt, oneside]{report}
+\documentclass[a4paper, 12pt, oneside]{book}
 
 \usepackage{array}
 \usepackage[english, italian]{babel}
@@ -17,9 +17,30 @@
 \usepackage[final]{microtype}
 \usepackage[toc, page]{appendix}
 \usepackage{longtable}
+\usepackage{makeidx}
 \usepackage{hyperref}
 \usepackage{caption}
 \usepackage[titles]{tocloft}
+
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{\nouppercase\rightmark}
+
+% per twoside
+%\fancyhead{}
+%\fancyhead[LE]{\nouppercase{\leftmark}}
+%\fancyhead[RO]{\nouppercase\rightmark}
+
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}
+\vspace*{\fill}
+\vspace{\fill}
+\thispagestyle{empty}
+\newpage
+\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
 
 \newenvironment{json}{\captionsetup{type=listing}}{}
 \SetupFloatingEnvironment{listing}{name=JSON}
@@ -71,12 +92,20 @@
 \makeatother
 
 \begin{document}
+\frontmatter
+\pagestyle{plain}
 \include{capitoli/frontespizio}
+\include{capitoli/ringraziamenti}
+
+\chapter*{Abstract}
+Gli interventi a distanza sono spesso di grande aiuto per chi soffre di sintomatologie come depressione e ansia, difatti in molti paesi del mondo sono molto diffusi. In Italia tuttavia  non esiste ancora una soluzione di questo tipo.\\
+Questo elaborato si propone di descrivere il lavoro svolto durante lo stage trimestrale svolto in remoto presso l'\textit{\textbf{Università degli Studi di Milano-Bicocca}} durante il quale è stata creata, assieme al \textbf{dipartimento di Psicologia}, una prima versione di una soluzione mobile creata in un ambiente multi-piattaforma per eseguire interventi di terapia cognitivo comportamentale in maniera anonima utilizzando la piattaforma \textit{Qualtrics}.
 
 \tableofcontents
 \listoffigures
 
-\include{capitoli/ringraziamenti}
+\mainmatter
+\pagestyle{fancy}
 \include{capitoli/introduzione}
 \include{capitoli/1_mindblooming}
 \include{capitoli/2_progettazione}
