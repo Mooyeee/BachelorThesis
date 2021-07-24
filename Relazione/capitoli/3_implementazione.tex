@@ -370,6 +370,7 @@ Come per le Multiple Choice, anche in queste domande è possibile inserire delle
 \subsubsection{Response}
 In questo caso le response sono identificate, oltre che dal \texttt{QuestionID}, anche dal \texttt{ChoiceID}, la chiave difatti è \texttt{QuestionID\_ChoiceID}. La risposta vera e propria tuttavia cambia, oltre che in base al tipo di risposta che accetta la matrice, anche in base al tipo stesso di matrice.
 
+\newpage
 \begin{json}
 \usemintedstyle[JSON]{trac}
 \begin{minted}[]{JSON}
@@ -389,11 +390,7 @@ In questo caso le response sono identificate, oltre che dal \texttt{QuestionID},
             "Display": "Riga 3"
         }
     },
-    "ChoiceOrder": [
-        "1",
-        "2",
-        "3"
-    ],
+    "ChoiceOrder": [ "1", "2", "3" ],
     "Answers": {
         "1": {
             "Display": "Colonna 1"
@@ -420,7 +417,7 @@ In questo caso le response sono identificate, oltre che dal \texttt{QuestionID},
 Il primo tipo di matrice messo a disposizione da Qualtrics è la matrice likert, una matrice che contiene di fatto delle domande simili alle multiple choice. Tramite il \texttt{Subselector} è possibile stabilire anche se le risposte debbano essere singole (\texttt{SingleAnswer}), multiple (\texttt{MultipleAnswer}) o singole con menù a tendina (\texttt{DL}). Possiamo osservare un esempio di questo tipo di domande nella \autoref{fig:matrix_likert}; in particolare è possibile notare come è stato scelto di mantenere un design coerente con le multiple choice, in modo da richiamare quel tipo di domande anche dal punto di vista del design, oltre che per le funzionalità. Questo tipo di matrici supporta anche un formato \texttt{Profile} che permette di avere delle risposte diverse per ogni sotto-domanda \textit{(ma devono tuttavia essere dello stesso tipo)}.
 
 \paragraph{Response:}
-Le risposte sono del tipo \texttt{\{"QuestionID\_ChoiceID": AnswerID\}} nel caso di risposta singola e del tipo \texttt{\{"QuestionID\_ChoiceID": ["AnswerID\_1", "AnswerID\_2"]\}} nel caso di risposta multipla. Nel caso un'opzione prevedesse una text entry, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
+Le risposte sono del tipo \texttt{\{"QuestionID\_ChoiceID": AnswerID\}} nel caso di risposta singola e del tipo \texttt{\{"QuestionID\_ChoiceID": ["AnswerID\_1", "AnswerID\_2"]\}} nel caso di risposta multipla. Nel caso un'opzione prevedesse una text entry, la risposta a tale text entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \begin{figure}[h!]
 \centering
@@ -461,7 +458,7 @@ Anche in questo caso, essendo una domanda che accetta solo risposte singole, le 
 Una matrice simile alle Likert è la matrice Text Entry che, invece che avere delle risposte chiuse, permette di scrivere una risposta aperta per ogni sotto-domanda. Possiamo notare in \autoref{fig:matrix_te} come anche lo stile adottato richiama molto le matrici Likert, proprio per creare un design coerente in tutta l'applicazione.
 
 \paragraph{Response:}
-Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": "testo"\}}.\\Nel caso un'opzione prevedesse una text entry aggiuntiva, la risposta a tale text entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
+Le risposte a questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": "testo"\}}.\\Nel caso un'opzione prevedesse una text entry aggiuntiva, la risposta a tale text entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \begin{figure}[h!]
 \centering
@@ -475,7 +472,7 @@ Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_Cho
 Anche le matrici di tipo Rank Order somigliano molto alle matrici Likert, ma hanno un campo di input in cui l'utente può inserire un numero: queste domande richiedono all'utente di definire un ordine tra le varie opzioni assegnando dei numeri interi ad ogni opzione. Possiamo notare nella \autoref{fig:matrix_ro} come lo stile adottato sia molto simile allo stile delle matrici Text Entry ma con un campo di input minore, essendo necessario meno spazio per inserire dei numeri.
 
 \paragraph{Response:}
-Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": numero\}}.\\Nel caso un'opzione prevedesse una text entry, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
+Le risposte a questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": numero\}}.\\Nel caso un'opzione prevedesse una text entry, la risposta a tale text entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \begin{figure}[h!]
 \centering
@@ -489,7 +486,7 @@ Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_Cho
 Anche questo ultimo tipo di matrici è simile alle Text Entry: permette di inserire dei numeri come le Rank Order ma che non hanno lo scopo di ordinare le risposte. Queste matrici riportano infine la somma di tutti i numeri inseriti nelle varie opzioni. È possibile osservare nella \autoref{fig:matrix_cs} come lo stile adottato sia molto simile alle matrici Rank Order, visto che accettano lo stesso tipo di input.
 
 \paragraph{Response:}
-Le risposte di questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": numero\}}.\\Nel caso un'opzione prevedesse una text entry, la risposta a tale texte entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
+Le risposte a questo tipo di domande sono del tipo\\ \texttt{\{"QuestionID\_ChoiceID": numero\}}.\\Nel caso un'opzione prevedesse una text entry, la risposta a tale text entry è del tipo \texttt{\{"QuestionID\_ChoiceID\_TEXT": "testo"\}}.
 
 \begin{figure}[h!]
 \centering
@@ -757,7 +754,7 @@ Quando abbiamo parlato di domande abbiamo visto che un altro parametro comune a 
 \end{json}
 
 \subsection{Struttura dati e traduzione}
-Possiamo notare come le regole logiche siano identificate da un \texttt{Operator}, che stabilisce cosa va controllato, e da degli operandi: il \texttt{LeftOperand} in particolare è un hyperlink ad un opzione di una domanda piuttosto che al numero di opzioni selezionate e così via da cui però è deducibile a cosa si riferisce. L'applicazione, leggendo l'operatore e gli operandi potrà sapere cosa deve controllare per validare una risposta.
+Possiamo notare come le regole logiche siano identificate da un \texttt{Operator}, che stabilisce cosa va controllato, e da degli operandi: il \texttt{LeftOperand} in particolare è un hyperlink ad un'opzione di una domanda piuttosto che al numero di opzioni selezionate e così via da cui però è deducibile a cosa si riferisce. L'applicazione, leggendo l'operatore e gli operandi potrà sapere cosa deve controllare per validare una risposta.
 
 Notiamo però che le regole possono essere multiple e sono legate fra loro da una \texttt{Conjuction}, ovvero da un operatore logico che può essere AND oppure OR: è necessario che l'applicazione valuti l'intero set di regole per poter valutare una risposta. È necessaria dunque una struttura dati che venga valutata implicitamente dall'applicazione.
 
@@ -850,7 +847,7 @@ Le rispettive fasce di rischio per le due scale sono:
 \item \textbf{[0, 40]} Indica un rischio minimo
 \item \textbf{[41, 50]} Indica un rischio lieve
 \item \textbf{[51, 60]} Indica un rischio moderato
-\item \textbf{[60, 80]} Indica un rischio alto
+\item \textbf{[61, 80]} Indica un rischio alto
 \end{itemize}
 
 La sotto-scala col rischio maggiore determinerà quindi la fascia legata all'ansia nell'applicazione.
@@ -863,8 +860,8 @@ Per calcolare le problematiche del sonno viene utilizzata la \textbf{Pittsburgh 
 \begin{itemize}
 \item \textbf{[0, 4]} Indica un rischio minimo
 \item \textbf{[5, 10]} Indica un rischio lieve
-\item \textbf{[10, 15]} Indica un rischio moderato
-\item \textbf{[15, 21]} Indica un rischio alto
+\item \textbf{[11, 15]} Indica un rischio moderato
+\item \textbf{[16, 21]} Indica un rischio alto
 \end{itemize}
 
 In questo caso le domande sono di vario tipo: alcune utilizzano una scala likert che fornisce direttamente il punteggio mentre altre richiedono all'utente di inserire, ad esempio, le ore di sonno dalle quali poi ricavare un punteggio.
